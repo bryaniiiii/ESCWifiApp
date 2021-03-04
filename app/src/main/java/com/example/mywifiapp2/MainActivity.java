@@ -24,83 +24,41 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private WifiManager wifiManager ;
-    private ListView listView;
-    private Button buttonScan;
-    private int size =0;
-    private List<ScanResult> results;
-    private ArrayList<String> arrayList = new ArrayList<>();
-    private ArrayAdapter adapter;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference();
+
+    private Button mapMe;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        buttonScan = findViewById(R.id.scan);
-        buttonScan.setOnClickListener(new View.OnClickListener() {
+
+        mapMe = findViewById(R.id.mapme);
+
+
+        mapMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanWifi();
-            }
-        });
-        listView = findViewById(R.id.wifiList);
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-        if (!wifiManager.isWifiEnabled()) {
-            Toast.makeText(this, "Wifi is disabled", Toast.LENGTH_LONG).show();
-            wifiManager.setWifiEnabled(true);
-        }
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
-        listView.setAdapter(adapter);
-
-
-        scanWifi();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                myRef.child("SSID").child(results.get(position).SSID).setValue(results.get(position).SSID);
-                myRef.child("SSID").child(results.get(position).SSID).child("BSSID").setValue(results.get(position).BSSID);
-                myRef.child("SSID").child(results.get(position).SSID).child("Description").setValue(results.get(position).capabilities);
-                myRef.child("SSID").child(results.get(position).SSID).child("RSSI").setValue(results.get(position).level);
+                Intent intent = new Intent(getApplicationContext(), MappingActivity.class);
+                startActivity(intent);
 
             }
         });
 
 
 
-    }
 
-    private void scanWifi() {
-        if (!wifiManager.isScanThrottleEnabled()) {
-            // scan without any restrictions
 
-            arrayList.clear();
-            registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
-            wifiManager.startScan();
-            Toast.makeText(this, "Scanning Wifi...", Toast.LENGTH_SHORT).show();
 
-        }
+
 
     }
 
-    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            results = wifiManager.getScanResults();
-            unregisterReceiver(this);
 
-            for (ScanResult scanResult : results) {
-                arrayList.add(" BSSID: \n" + scanResult.BSSID + "\n" + " SSID: \n" + scanResult.SSID+ "\n" + " Description: \n" + scanResult.capabilities +"\n" + " RSSI: \n" + scanResult.level);
-                adapter.notifyDataSetChanged();
-            }
-        }
-    };
+
 
 
 

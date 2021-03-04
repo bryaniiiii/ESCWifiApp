@@ -8,24 +8,28 @@
     android:padding="10dp"
     android:orientation="vertical">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/wifiList"
+        android:layout_weight="0.97" />
+
+
+    <EditText
+        android:id="@+id/locationName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"/>
+
 
     <Button
-        android:id="@+id/mapme"
+        android:id="@+id/scan"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
         android:background="@color/purple_500"
-        android:text="Enter Mapping Phase"
+        android:text="Scan Wifi"
         />
-    <Button
-        android:id="@+id/testme"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:background="@color/purple_500"
-        android:text="Enter Testing Phase"
-        />
-
 
 
 
