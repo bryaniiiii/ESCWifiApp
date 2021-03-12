@@ -21,15 +21,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MappingActivity extends AppCompatActivity {
 
     private WifiManager wifiManager;
     private ListView listView;
-    private Button buttonScan;
+    private Button buttonaddPoint;
     private EditText locationName;
     private int size = 0;
+    private EditText pointX;
+    private EditText pointY;
     private List<ScanResult> results;
     private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayAdapter adapter;
@@ -41,14 +45,10 @@ public class MappingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapping);
-        buttonScan = findViewById(R.id.scan);
-        locationName = findViewById(R.id.locationName);
-        buttonScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanWifi();
-            }
-        });
+        buttonaddPoint = findViewById(R.id.addPoint);
+        pointX = findViewById(R.id.pointX);
+        pointY = findViewById(R.id.pointY);
+
         listView = findViewById(R.id.wifiList);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -63,27 +63,18 @@ public class MappingActivity extends AppCompatActivity {
 
         scanWifi();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        buttonaddPoint.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-                myRef.child("Location").setValue(String.valueOf(locationName.getText()));
-                myRef.child("Location").child(String.valueOf(locationName.getText())).child(results.get(position).SSID).child("SSID").setValue(results.get(position).SSID);
-                myRef.child("Location").child(String.valueOf(locationName.getText())).child(results.get(position).SSID).child("BSSID").setValue(results.get(position).BSSID);
-                myRef.child("Location").child(String.valueOf(locationName.getText())).child(results.get(position).SSID).child("Description").setValue(results.get(position).capabilities);
-                myRef.child("Location").child(String.valueOf(locationName.getText())).child(results.get(position).SSID).child("RSSI").setValue(results.get(position).level);
-
-
-
+            public void onClick(View v) {
+                Mapping.add_data(new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString())), results);
+                System.out.println("Data added!");
             }
         });
-
 
     }
 
     private void scanWifi() {
-        if (!wifiManager.isScanThrottleEnabled()) {
+
             // scan without any restrictions
 
             arrayList.clear();
@@ -92,7 +83,7 @@ public class MappingActivity extends AppCompatActivity {
             wifiManager.startScan();
             Toast.makeText(this, "Scanning Wifi...", Toast.LENGTH_SHORT).show();
 
-        }
+
 
     }
 
@@ -103,12 +94,10 @@ public class MappingActivity extends AppCompatActivity {
             unregisterReceiver(this);
 
             for (ScanResult scanResult : results) {
-                arrayList.add(" BSSID: \n" + scanResult.BSSID + "\n" + " SSID: \n" + scanResult.SSID + "\n" + " Description: \n" + scanResult.capabilities + "\n" + " RSSI: \n" + scanResult.level);
+                arrayList.add(" BSSID: \n" + scanResult.BSSID);
                 adapter.notifyDataSetChanged();
             }
         }
     };
 
 }
-
-

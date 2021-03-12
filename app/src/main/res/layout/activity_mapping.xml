@@ -16,19 +16,27 @@
 
 
     <EditText
-        android:id="@+id/locationName"
+        android:id="@+id/pointX"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="15dp"/>
+        android:layout_margin="15dp"
+        android:inputType="numberDecimal"
+        />
+    <EditText
+        android:id="@+id/pointY"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:inputType="numberDecimal"/>
 
 
     <Button
-        android:id="@+id/scan"
+        android:id="@+id/addPoint"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
         android:background="@color/purple_500"
-        android:text="Scan Wifi"
+        android:text="Add Point"
         />
 
 

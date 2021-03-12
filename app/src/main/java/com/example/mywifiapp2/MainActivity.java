@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Button mapMe;
+    private Button locateMe;
 
 
 
@@ -36,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mapMe = findViewById(R.id.mapme);
+        locateMe = findViewById(R.id.locateme);
+
+        locateMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LocateActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         mapMe.setOnClickListener(new View.OnClickListener() {
