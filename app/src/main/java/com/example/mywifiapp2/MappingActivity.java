@@ -63,6 +63,9 @@ public class MappingActivity extends AppCompatActivity {
     private ListView listView_wifiList;
     private ArrayList<String> wifiList;
     private ArrayAdapter arrayAdapter;
+    private EditText pointX,pointY, locationName;
+    private Point currentCoord;
+    private String locationNameString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +73,10 @@ public class MappingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mapping);
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        pointX = findViewById(R.id.pointX);
+        pointY = findViewById(R.id.pointY);
+        locationName = findViewById(R.id.locationName);
 
-        textViewWifiNetworks = findViewById(R.id.txtWifiNetworks);
         listView_wifiList = findViewById(R.id.listView_wifi);
         wifiList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,wifiList);
@@ -83,7 +88,7 @@ public class MappingActivity extends AppCompatActivity {
                 getWifiNetworksList();
 
 
-                textViewWifiNetworks.setVisibility(View.GONE);
+
                 listView_wifiList.setAdapter(arrayAdapter);
 
             }
@@ -157,6 +162,8 @@ private void getWifiNetworksList() {
             scanList = wifiManager.getScanResults();
             System.out.println(scanList.size());
             wifiList.add("Number Of Wifi connections : " + " " + scanList.size() + "\n\n");
+            currentCoord = new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString()));
+            locationNameString = locationName.getText().toString();
             for (int i = 0; i < scanList.size(); i++) {
                 stringBuilder = new StringBuilder();
                 stringBuilder.append(new Integer(i + 1).toString() + ". ");
@@ -167,7 +174,10 @@ private void getWifiNetworksList() {
                 database.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.hasChild(Mac_address)){database.child("Scan").child("Nearby WIFI Data Values").child(Mac_address).setValue(rssi);}
+                        if (!snapshot.hasChild(Mac_address)){
+                            database.child("Scan").child(locationNameString).child("MAC Address").child(Mac_address).setValue(rssi);
+                            database.child("Scan").child(locationNameString).child("Coordinates").setValue(currentCoord);
+                        }
                     }
 
                     @Override
