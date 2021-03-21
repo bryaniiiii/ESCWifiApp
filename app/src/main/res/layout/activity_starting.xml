@@ -34,7 +34,14 @@
         android:text="Log Out"
         />
 
-
+    <Button
+        android:id="@+id/floorplan"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@color/purple_500"
+        android:text="Floor Plan"
+        />
 
 
 
