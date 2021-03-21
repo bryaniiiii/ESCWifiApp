@@ -37,6 +37,7 @@ public class MappingActivity extends AppCompatActivity {
     private List<ScanResult> results;
     private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayAdapter adapter;
+    private Mapping mapper = new Mapping();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference();
 
@@ -66,7 +67,8 @@ public class MappingActivity extends AppCompatActivity {
         buttonaddPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Mapping.add_data(new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString())), results);
+
+                mapper.add_data(new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString())), results);
                 System.out.println("Data added!");
             }
         });
