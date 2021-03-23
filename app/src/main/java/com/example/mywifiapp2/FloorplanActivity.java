@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
@@ -43,18 +45,14 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
 
     private static final int BEARING_MOVE = 17;
 
-    // This is the exact latlng for SUTD (Don't change it)
-    private static LatLng SUTD = new LatLng(1.34, 103.962);
-
-    //private static final LatLng NEAR_SUTD = new LatLng(SUTD.latitude - 0.001, SUTD.longitude - 0.025);
+    // This is the exact latlng for SUTD
+    private static final LatLng SUTD = new LatLng(1.34, 103.962);
 
     private final List<BitmapDescriptor> images = new ArrayList<BitmapDescriptor>();
 
-    private List<LatLng> saveMarker = new ArrayList<LatLng>();
+    private final List<LatLng> saveMarker = new ArrayList<LatLng>();
 
     private GroundOverlay groundOverlay;
-
-    private GroundOverlay groundOverlayRotated;
 
     private SeekBar transparencyBar;
 
@@ -98,18 +96,22 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
 
     @Override
     public void onMapReady(GoogleMap map) {
-        this.map = map;
+        // Remove any existing images
+        images.clear();
 
+        this.map = map;
+        this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(SUTD, 18));
         // Register a listener to respond to clicks on GroundOverlays.
         this.map.setOnGroundOverlayClickListener(this);
-
         // Register a listener to respond to clicks on the Map.
         this.map.setOnMapClickListener(this);
 
+        // Assign views
         Clear = findViewById(R.id.ClearImages);
         Download = findViewById(R.id.downloadImage);
         tapTextView = findViewById(R.id.tap_text);
 
+        // Clear the entire map
         Clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +119,7 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
             }
         });
 
+        // Download floorplan from firebase
         Download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,29 +128,11 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
             }
         });
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(SUTD, 18));
-
-        // Remove any existing images
-        images.clear();
-
         // TODO: Download images from firebase and convert them into bitmap format
         // Add bitmap images to the images array
 
         images.add(BitmapDescriptorFactory.fromResource(R.drawable.sutdmap));
         images.add(BitmapDescriptorFactory.fromResource(R.drawable.download));
-
-
-        // Night Fiesta Overlay (Features --> Rotated, clickable to adjust transparency)
-        /*groundOverlayRotated = map.addGroundOverlay(new GroundOverlayOptions()
-                .image(images.get(1)).anchor(0, 1)
-                .position(NEAR_SUTD, 4300f, 3025f)
-                .bearing(30)
-                .clickable(((CheckBox) findViewById(R.id.toggleClickability)).isChecked()));*/
-
-        // SUTD Floorplan Overlay (Adjustable through transparency bar)
-        /*groundOverlay = map.addGroundOverlay(new GroundOverlayOptions()
-                .image(images.get(currentEntry)).anchor(0, 1)
-                .position(SUTD, 86f, 65f));*/
 
         transparencyBar.setOnSeekBarChangeListener(this);
         rotationBar.setOnSeekBarChangeListener(this);
@@ -165,6 +150,7 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
     public void onStartTrackingTouch(SeekBar seekBar) {
     }
 
+    // Set the rate of change per progress for the seek bars
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (groundOverlay != null && seekBar == transparencyBar) {
@@ -178,7 +164,7 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
     // Download image from firebase
     // If future authentication is required for firebase, go to RULES setting in firebase and change == to != NULL
     public void download(){
-        storageReference = firebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
         ref = storageReference.child("SUTD MAP.png");
 
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -217,43 +203,59 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
     // TODO: Place the points of type Point() on the overlay when it is clicked
     @Override
     public void onGroundOverlayClick(GroundOverlay groundOverlay) {
-        // Toggle transparency value between 0.0f and 0.5f. Initial default value is 0.0f.
-        groundOverlayRotated.setTransparency(0.5f - groundOverlayRotated.getTransparency());
-    }
 
-    /**
-     * Toggles the clickability of the smaller, rotated overlay based on the state of the View that
-     * triggered this call.
-     * This callback is defined on the CheckBox in the layout for this Activity.
-     */
-    public void toggleClickability(View view) {
-        if (groundOverlayRotated != null) {
-            groundOverlayRotated.setClickable(((CheckBox) view).isChecked());
-        }
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        // Displays the latlng coord that was clicked
-        tapTextView.setText("tapped, point=" + latLng);
 
-        // Add a reference marker to the marker array
-        saveMarker.add(latLng);
+        // If array is empty, add a marker
+        if (saveMarker.size() == 0){
+            // Displays the latlng coord that was clicked
+            tapTextView.setText("tapped, point=" + latLng);
 
-        // Add a marker, which acts as the reference point
-        map.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title("Reference Point")
-                .draggable(true)
-                .anchor(0.5f,0.5f)
-                .flat(true)
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.sutdmap)));
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            // Add a reference marker to the marker array
+            saveMarker.add(latLng);
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(SUTD, 16));
+            // Add a marker, which acts as the reference point
+            map.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title("Reference Point")
+                    .draggable(true)
+                    .anchor(0.5f,0.5f)
+                    .flat(true)
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.sutdmap)));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(SUTD, 16));
+        }
+        // Else, we are adding 2nd marker. Check whether 1st latlng point is on the left and below the 2nd latlng point
+        else if (latLng.latitude <= saveMarker.get(0).latitude || latLng.longitude <= saveMarker.get(0).longitude){
+            Toast.makeText(FloorplanActivity.this, "Please tap on a NorthEast point instead!", Toast.LENGTH_SHORT).show();
+
+        } else{
+                // Displays the latlng coord that was clicked
+                tapTextView.setText("tapped, point=" + latLng);
+
+                // Add a reference marker to the marker array
+                saveMarker.add(latLng);
+
+                // Add a marker, which acts as the reference point
+                map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Reference Point")
+                        .draggable(true)
+                        .anchor(0.5f,0.5f)
+                        .flat(true)
+                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.sutdmap)));
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(SUTD, 16));
+        }
+
 
         // After the second marker has been placed, we assign the latlng bounds
-        if (saveMarker.size() == 2){
+        while(saveMarker.size() == 2){
             LatLngBounds floorplanBounds = new LatLngBounds(
                     saveMarker.get(0),
                     saveMarker.get(1));
@@ -265,7 +267,6 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
                     .bearing(0)
                     .positionFromBounds(floorplanBounds)
                     .clickable(true));
-
             // Clear the marker references in the array so that the array can be reused
             saveMarker.clear();
         }
