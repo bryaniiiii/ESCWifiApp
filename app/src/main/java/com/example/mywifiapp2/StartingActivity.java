@@ -25,7 +25,9 @@ public class StartingActivity extends AppCompatActivity {
     private Button mapMe;
     private Button locateMe;
     private Button logout;
-    private Button floorPlan;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +37,6 @@ public class StartingActivity extends AppCompatActivity {
         mapMe = findViewById(R.id.mapme);
         locateMe = findViewById(R.id.locateme);
         logout = findViewById(R.id.logout);
-        floorPlan = findViewById(R.id.floorplan);
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +46,6 @@ public class StartingActivity extends AppCompatActivity {
                 finish();
             }
         });
-
         locateMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,15 +60,21 @@ public class StartingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MappingActivity.class);
                 startActivity(intent);
+
             }
         });
 
-        floorPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FloorplanActivity.class);
-                startActivity(intent);
-            }
-        });
+
+
+
+
+
+
+
+
     }
+
+
+
+
 }
