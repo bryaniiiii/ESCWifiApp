@@ -4,49 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MappingActivity">
+    tools:context=".MainActivity"
+    android:padding="10dp"
+    android:orientation="vertical">
 
     <ListView
-        android:id="@+id/listView_wifi"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_weight="0.97"
-        />
+        android:id="@+id/wifiList"
+        android:layout_weight="0.97" />
 
 
-    <EditText
-        android:id="@+id/locationName"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:inputType="text"
-
-
-        />
     <EditText
         android:id="@+id/pointX"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
         android:inputType="numberDecimal"
-
-
         />
     <EditText
         android:id="@+id/pointY"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:inputType="numberDecimal"
-/>
+        android:inputType="numberDecimal"/>
 
 
     <Button
-        android:id="@+id/button_click"
+        android:id="@+id/addPoint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CLICK"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@color/purple_500"
+        android:text="Add Point"
         />
 
 
