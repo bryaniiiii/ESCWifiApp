@@ -158,7 +158,7 @@ private void getWifiNetworksList() {
         @RequiresApi(api = Build.VERSION_CODES.R)
         @Override
         public void onReceive(Context context, Intent intent) {
-            //stringBuilder = new StringBuilder();
+
             scanList = wifiManager.getScanResults();
             System.out.println(scanList.size());
             wifiList.add("Number Of Wifi connections : " + " " + scanList.size() + "\n\n");
@@ -185,11 +185,10 @@ private void getWifiNetworksList() {
 
                     }
                 });
-                //sb.append("\n\n");
+
             }
             arrayAdapter.notifyDataSetChanged();
-            //textViewWifiNetworks.setText(stringBuilder);
-            //System.out.println(stringBuilder);
+
 
 
         }
