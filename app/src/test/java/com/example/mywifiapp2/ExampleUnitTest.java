@@ -1,7 +1,5 @@
 package com.example.mywifiapp2;
 
-
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -41,7 +40,7 @@ public class ExampleUnitTest {
 
 
 @RunWith(PowerMockRunner.class)
-@PowerMockRunnerDelegate(JUnit4.class)
+//@PowerMockRunnerDelegate(JUnit4.class)
 @PrepareForTest({ FirebaseDatabase.class})
 public class LoginActivityTest {
 
