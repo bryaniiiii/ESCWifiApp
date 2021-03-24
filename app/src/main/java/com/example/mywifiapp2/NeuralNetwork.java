@@ -62,7 +62,7 @@ public class NeuralNetwork {
          * 3. Calculate gradients for back propagation using error, output, and learning rate*/
         Matrix target = Matrix.fromArray(Y); // (o*1)
 
-        Matrix error = Matrix.subtract(target, output); // (o*1) subtract (o*1) => (o*1)
+        Matrix error = target.subtract(output); // (o*1) subtract (o*1) => (o*1)
         Matrix gradient = output.dsigmoid(); // (o*1)
         gradient.multiply(error); // (o*1) * (o*1) => (o*1)
         gradient.multiply(l_rate); // (o*1)

@@ -21,11 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class StartingActivity extends AppCompatActivity {
     private Button mapMe;
     private Button locateMe;
     private Button logout;
-
 
 
 
@@ -60,7 +60,6 @@ public class StartingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MappingActivity.class);
                 startActivity(intent);
-
             }
         });
     }
