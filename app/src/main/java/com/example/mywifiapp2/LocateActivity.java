@@ -90,9 +90,9 @@ public class LocateActivity extends AppCompatActivity {
         locateMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locator = new Testing(results);
-                currentCoordinates = locator.getPrediction();
-                currentPosition.setText("You are currently positioned at coordinates" + currentCoordinates);
+//                locator = new Testing(results);
+//                currentCoordinates = locator.getPrediction();
+//                currentPosition.setText("You are currently positioned at coordinates" + currentCoordinates);
 
 
 
