@@ -7,13 +7,13 @@
     android:orientation="vertical"
     tools:context=".MappingActivity">
 
-    <ListView
-        android:id="@+id/listView_wifi"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_weight="0.97"
-        />
 
+
+
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/mappingstuff"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
 
     <EditText
         android:id="@+id/locationName"
@@ -47,6 +47,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CLICK"
+        />
+    <Button
+        android:id="@+id/saveMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="save Map"
         />
 
 
