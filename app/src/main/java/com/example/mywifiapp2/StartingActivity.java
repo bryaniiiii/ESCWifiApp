@@ -26,6 +26,7 @@ public class StartingActivity extends AppCompatActivity {
     private Button locateMe;
     private Button logout;
     private Button floorPlan;
+    private Button jjmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class StartingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_starting);
 
         mapMe = findViewById(R.id.mapme);
+        jjmap = findViewById(R.id.jjmap);
         locateMe = findViewById(R.id.locateme);
         logout = findViewById(R.id.logout);
         floorPlan = findViewById(R.id.floorplan);
@@ -51,6 +53,14 @@ public class StartingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LocateActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        jjmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CollectionMapActivity.class);
                 startActivity(intent);
             }
         });

@@ -219,6 +219,10 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
     public void onGroundOverlayClick(GroundOverlay groundOverlay) {
         // Toggle transparency value between 0.0f and 0.5f. Initial default value is 0.0f.
         groundOverlayRotated.setTransparency(0.5f - groundOverlayRotated.getTransparency());
+
+
+
+
     }
 
     /**
@@ -230,6 +234,7 @@ public class FloorplanActivity extends AppCompatActivity implements GoogleMap.On
         if (groundOverlayRotated != null) {
             groundOverlayRotated.setClickable(((CheckBox) view).isChecked());
         }
+
     }
 
     @Override

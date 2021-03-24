@@ -32,28 +32,17 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MappingActivity">
+        <activity android:name=".MappingActivity"></activity>
+        <activity android:name=".LocateActivity"></activity>
+        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".StartingActivity"></activity>
+        <activity android:name=".FloorplanActivity"></activity>
+        <activity android:name=".CollectionMapActivity"></activity>
 
-
-        </activity>
-        <activity android:name=".LocateActivity">
-
-
-        </activity>
-        <activity android:name=".SignUpActivity">
-
-
-        </activity>
-        <activity android:name=".StartingActivity">
-
-        </activity>
-        <activity android:name=".FloorplanActivity">
-
-        </activity>
+        <service android:name="com.example.mywifiapp2.wapcollector.IndoorCollectService" />
     </application>
 
 </manifest>
