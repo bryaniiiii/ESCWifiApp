@@ -53,18 +53,6 @@ public class Matrix {
         return this;
     }
 
-//    public static Matrix subtract(Matrix a, Matrix b) {
-//        Matrix temp=new Matrix(a.rows,a.cols);
-//        for(int i=0;i<a.rows;i++)
-//        {
-//            for(int j=0;j<a.cols;j++)
-//            {
-//                temp.data[i][j]=a.data[i][j]-b.data[i][j];
-//            }
-//        }
-//        return temp;
-//    }
-
     public static Matrix transpose(Matrix a) {
         Matrix temp=new Matrix(a.cols,a.rows);
         for(int i=0;i<a.rows;i++)
@@ -143,18 +131,8 @@ public class Matrix {
         for(int i =0;i<x.length;i++)
             temp.data[i][0]=x[i];
         return temp;
-    }
 
-//    public static Matrix fromDouble(double [][]x)
-//    {
-//        Matrix temp = new Matrix(x.length, x[0].length);
-//        for(int i = 0; i < x.length; i++){
-//            for(int j = 0; j < x[0].length; j++){
-//                temp.data[i][j]=x[i][j];
-//            }
-//        }
-//        return temp;
-//    }
+    }
 
     public List<Double> toArray() {
         List<Double> temp= new ArrayList<Double>()  ;

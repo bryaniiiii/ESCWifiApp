@@ -2,6 +2,7 @@ package com.example.mywifiapp2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.PatternsCompat;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -44,13 +45,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         firebaseAuth = FirebaseAuth.getInstance();
         emailEt = findViewById(R.id.email);
         passwordEt = findViewById(R.id.password);
+
         SignInButton = findViewById(R.id.login);
         progressDialog = new ProgressDialog(this);
         SignUpTv = findViewById(R.id.signUpTv);
-
         SignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void Login() {
+    private void Login(){
         String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
 
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
         progressDialog.setCanceledOnTouchOutside(false);
@@ -89,22 +89,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(MainActivity.this, StartingActivity.class);
                     startActivity(intent);
                     finish();
                 }
-                else{Toast.makeText(MainActivity.this, "Invalid Account", Toast.LENGTH_LONG).show();}
+                else{Toast.makeText(MainActivity.this, "Login fail", Toast.LENGTH_LONG).show();}
                 progressDialog.dismiss();
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }
 
