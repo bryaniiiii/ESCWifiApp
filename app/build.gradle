@@ -40,22 +40,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.6.0'
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
     testImplementation 'junit:junit:4.+'
-    testImplementation 'org.mockito:mockito-inline:3.7.7'
-    testImplementation 'org.mockito:mockito-junit-jupiter:3.7.7'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.google.firebase:firebase-auth'
-<<<<<<< Updated upstream
-    testImplementation 'org.powermock:powermock-api-mockito:1.6.2'
-    testImplementation 'org.powermock:powermock-module-junit4-rule-agent:1.6.2'
-    testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.2'
-    testImplementation 'org.powermock:powermock-module-junit4:1.6.2'
-=======
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation "org.powermock:powermock-module-junit4:1.6.2"
     testImplementation "org.powermock:powermock-module-junit4-rule:1.6.2"
     testImplementation "org.powermock:powermock-api-mockito:1.6.2"
     testImplementation "org.powermock:powermock-classloading-xstream:1.6.2"
->>>>>>> Stashed changes
 }
