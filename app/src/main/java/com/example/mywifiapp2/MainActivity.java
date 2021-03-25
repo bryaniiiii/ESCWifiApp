@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-                else{Toast.makeText(MainActivity.this, "Login fail", Toast.LENGTH_LONG).show();}
+                else{Toast.makeText(MainActivity.this, "Account does not exist", Toast.LENGTH_LONG).show();}
                 progressDialog.dismiss();
             }
         });
