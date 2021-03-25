@@ -40,11 +40,13 @@ public class SignUpTest {
     }
 
     @Test
-    public void validEmailTest() { assertTrue(SignUp.isValidEmail(real_email)); }
+    public void validEmailTest3() { assertFalse(SignUp.isValidEmail(fake_email)); }
 
     @Test
-    public void validEmailTest2() { assertFalse(SignUp.isValidEmail(fake_email)); }
+    public void validEmailTest2() { assertFalse(SignUp.isValidEmail(fake_email2)); }
 
     @Test
-    public void validEmailTest3() { assertFalse(SignUp.isValidEmail(fake_email2)); }
+    public void validEmailTest() {
+        assertTrue(SignUp.isValidEmail(real_email));
+    }
 }

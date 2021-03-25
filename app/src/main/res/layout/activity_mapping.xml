@@ -7,9 +7,13 @@
     android:orientation="vertical"
     tools:context=".MappingActivity">
 
-
+<<<<<<< Updated upstream
     <ListView
         android:id="@+id/listView_wifi"
+=======
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/mappingstuff"
+>>>>>>> Stashed changes
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="0.97"
@@ -41,7 +45,16 @@
         android:id="@+id/button_click"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:background="@drawable/button"
+=======
+<<<<<<< Updated upstream
+        android:text="CLICK"
+        />
+
+
+=======
+>>>>>>> parent of 6db032c (Test implementation, fixed weird bug)
         android:text="CLICK" />
 
     <Button
@@ -50,6 +63,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button"
         android:text="save Map" />
-
+>>>>>>> Stashed changes
 
 </LinearLayout>
