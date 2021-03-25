@@ -21,10 +21,10 @@ public class Matrix {
         }
     }
 
-    public Matrix add(Matrix m) {
+    public void add(Matrix m) {
         if(cols!=m.cols || rows!=m.rows) {
             System.out.println("Shape Mismatch");
-            return this;
+            return;
         }
 
         for(int i=0;i<rows;i++)
@@ -34,37 +34,19 @@ public class Matrix {
                 this.data[i][j]+=m.data[i][j];
             }
         }
-        return this;
     }
 
-    public Matrix subtract(Matrix m) {
-        if(cols!=m.cols || rows!=m.rows) {
-            System.out.println("Shape Mismatch");
-            return this;
-        }
-
-        for(int i=0;i<rows;i++)
+    public static Matrix subtract(Matrix a, Matrix b) {
+        Matrix temp=new Matrix(a.rows,a.cols);
+        for(int i=0;i<a.rows;i++)
         {
-            for(int j=0;j<cols;j++)
+            for(int j=0;j<a.cols;j++)
             {
-                this.data[i][j]-=m.data[i][j];
+                temp.data[i][j]=a.data[i][j]-b.data[i][j];
             }
         }
-        return this;
+        return temp;
     }
-
-//    public static Matrix subtract(Matrix a, Matrix b) {
-//        Matrix temp=new Matrix(a.rows,a.cols);
-//        for(int i=0;i<a.rows;i++)
-//        {
-//            for(int j=0;j<a.cols;j++)
-//            {
-//                temp.data[i][j]=a.data[i][j]-b.data[i][j];
-//            }
-//        }
-//        return temp;
-//    }
-
     public static Matrix transpose(Matrix a) {
         Matrix temp=new Matrix(a.cols,a.rows);
         for(int i=0;i<a.rows;i++)
@@ -94,7 +76,7 @@ public class Matrix {
         return temp;
     }
 
-    public Matrix multiply(Matrix a) {
+    public void multiply(Matrix a) {
         for(int i=0;i<a.rows;i++)
         {
             for(int j=0;j<a.cols;j++)
@@ -102,10 +84,10 @@ public class Matrix {
                 this.data[i][j]*=a.data[i][j];
             }
         }
-        return this;
+
     }
 
-    public Matrix multiply(double a) {
+    public void multiply(double a) {
         for(int i=0;i<rows;i++)
         {
             for(int j=0;j<cols;j++)
@@ -113,7 +95,7 @@ public class Matrix {
                 this.data[i][j]*=a;
             }
         }
-        return this;
+
     }
 
     public void sigmoid() {
@@ -143,18 +125,8 @@ public class Matrix {
         for(int i =0;i<x.length;i++)
             temp.data[i][0]=x[i];
         return temp;
-    }
 
-//    public static Matrix fromDouble(double [][]x)
-//    {
-//        Matrix temp = new Matrix(x.length, x[0].length);
-//        for(int i = 0; i < x.length; i++){
-//            for(int j = 0; j < x[0].length; j++){
-//                temp.data[i][j]=x[i][j];
-//            }
-//        }
-//        return temp;
-//    }
+    }
 
     public List<Double> toArray() {
         List<Double> temp= new ArrayList<Double>()  ;

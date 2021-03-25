@@ -7,16 +7,13 @@
         android:id="@+id/currentLocation"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="15dp"
-        android:layout_weight="1"/>
-
+        android:layout_margin="15dp"/>
     <Button
         android:id="@+id/locateme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/button"
+        android:background="@color/purple_500"
         android:text="Locate Me"
         />
 </LinearLayout>

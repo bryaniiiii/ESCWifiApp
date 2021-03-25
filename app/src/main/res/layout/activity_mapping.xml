@@ -7,6 +7,9 @@
     android:orientation="vertical"
     tools:context=".MappingActivity">
 
+
+
+
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/mappingstuff"
         android:layout_width="match_parent"
@@ -17,32 +20,41 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:inputType="text" />
+        android:inputType="text"
 
+
+        />
     <EditText
         android:id="@+id/pointX"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
 
+
+        />
     <EditText
         android:id="@+id/pointY"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+/>
+
 
     <Button
         android:id="@+id/button_click"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CLICK" />
-
+        android:text="CLICK"
+        />
     <Button
         android:id="@+id/saveMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="save Map" />
+        android:text="save Map"
+        />
+
+
 
 </LinearLayout>
