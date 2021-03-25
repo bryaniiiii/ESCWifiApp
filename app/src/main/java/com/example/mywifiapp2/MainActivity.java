@@ -40,21 +40,17 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         firebaseAuth = FirebaseAuth.getInstance();
         emailEt = findViewById(R.id.email);
         passwordEt = findViewById(R.id.password);
-
         SignInButton = findViewById(R.id.login);
         progressDialog = new ProgressDialog(this);
         SignUpTv = findViewById(R.id.signUpTv);
+
         SignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,15 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
-
-
-
     }
-    private void Login(){
+
+    private void Login() {
         String email = emailEt.getText().toString();
         String password = passwordEt.getText().toString();
 
@@ -99,23 +89,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(MainActivity.this, "Successfully registered", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(MainActivity.this, StartingActivity.class);
                     startActivity(intent);
                     finish();
                 }
-                else{Toast.makeText(MainActivity.this, "Sign up fail!", Toast.LENGTH_LONG).show();}
+                else{Toast.makeText(MainActivity.this, "Invalid Account", Toast.LENGTH_LONG).show();}
                 progressDialog.dismiss();
             }
         });
-
-
-
     }
-    private Boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
-    }
+}
 
 
 

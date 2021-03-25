@@ -27,6 +27,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -43,4 +46,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    testImplementation "org.powermock:powermock-module-junit4:1.6.2"
+    testImplementation "org.powermock:powermock-module-junit4-rule:1.6.2"
+    testImplementation "org.powermock:powermock-api-mockito:1.6.2"
+    testImplementation "org.powermock:powermock-classloading-xstream:1.6.2"
 }
