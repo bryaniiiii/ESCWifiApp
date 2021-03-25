@@ -2,6 +2,7 @@ package com.example.mywifiapp2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.PatternsCompat;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -40,9 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,13 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
-
-
-
     }
     private void Login(){
         String email = emailEt.getText().toString();
@@ -91,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
         progressDialog.setCanceledOnTouchOutside(false);
@@ -99,23 +89,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(MainActivity.this, "Successfully registered", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(MainActivity.this, StartingActivity.class);
                     startActivity(intent);
                     finish();
                 }
-                else{Toast.makeText(MainActivity.this, "Sign up fail!", Toast.LENGTH_LONG).show();}
+                else{Toast.makeText(MainActivity.this, "Login fail", Toast.LENGTH_LONG).show();}
                 progressDialog.dismiss();
             }
         });
-
-
-
     }
-    private Boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
-    }
-    }
+}
 
 
 

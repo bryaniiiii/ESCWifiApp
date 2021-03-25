@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-
+        android:background="@drawable/button"
         android:gravity="center"
         android:text="UPLOAD FROM DEVICE"
         app:layout_constraintTop_toBottomOf="@+id/PreviewImage"
@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-
+        android:background="@drawable/button"
         android:text="Start Mapping"
         app:layout_constraintTop_toBottomOf="@+id/FirebaseUpload"
         tools:layout_editor_absoluteX="60dp" />
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_marginTop="4dp"
-
+        android:background="@drawable/button"
         android:text="Change Image"
         app:layout_constraintTop_toBottomOf="@+id/button_confirm"
         tools:layout_editor_absoluteX="60dp" />
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_weight="1"
-
+        android:background="@drawable/button"
         android:text="Choose from Uploaded Maps"
         app:layout_constraintTop_toBottomOf="@+id/DeviceUpload"
         tools:layout_editor_absoluteX="20dp" />

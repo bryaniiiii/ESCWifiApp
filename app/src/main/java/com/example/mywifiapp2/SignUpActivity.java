@@ -2,15 +2,15 @@ package com.example.mywifiapp2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.PatternsCompat;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup);
+        setContentView(R.layout.activity_signup);
         firebaseAuth = FirebaseAuth.getInstance();
         emailEt = findViewById(R.id.email);
         passwordEt1 = findViewById(R.id.password1);
@@ -72,23 +72,23 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
         else if (TextUtils.isEmpty(password1)){
-            emailEt.setError("Enter your Password");
+            passwordEt1.setError("Enter your Password");
             return;
         }
         else if (TextUtils.isEmpty(password2)){
-            emailEt.setError("Confirm your Password");
+            passwordEt2.setError("Confirm your Password");
             return;
         }
         else if (!password1.equals(password2)){
-            emailEt.setError("Different Password");
+            passwordEt2.setError("Password different");
             return;
         }
-        else if (password1.length()<4){
-            emailEt.setError("Length should be > 4");
+        else if (password1.length()<6){
+            passwordEt1.setError("Length should be > 5");
             return;
         }
         else if (!isValidEmail(email)){
-            emailEt.setError("Length should be > 4");
+            emailEt.setError("Invalid Email");
             return;
         }
         progressDialog.setMessage("Please wait...");
@@ -98,12 +98,12 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(SignUpActivity.this, "Successfully registered", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(SignUpActivity.this, StartingActivity.class);
                     startActivity(intent);
                     finish();
                 }
-                else{Toast.makeText(SignUpActivity.this, "Sign up fail!", Toast.LENGTH_LONG).show();}
+                else{Toast.makeText(SignUpActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();}
                 progressDialog.dismiss();
             }
         });
@@ -111,8 +111,8 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }
-    private Boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    public Boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && PatternsCompat.EMAIL_ADDRESS.matcher(target).matches());
     }
 
 }
