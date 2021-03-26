@@ -61,7 +61,6 @@ public class MappingActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
         listView.setAdapter(adapter);
 
-
         scanWifi();
 
         buttonaddPoint.setOnClickListener(new View.OnClickListener() {

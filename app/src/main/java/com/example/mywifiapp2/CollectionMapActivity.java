@@ -44,11 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/***
- * Created by Leslie Xong 2018,Oct (lesliexong@gmail.com)
- * For indoor positioning new beginners, this app is used to collect wifi/beacon fingerprint data.
- */
-
 public class CollectionMapActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
@@ -60,7 +55,7 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
     private RadioButton typeRadioButton;
     private Button startButton;
 
-    private EditText strideEdit;
+    //private EditText strideEdit;
     private EditText xEdit;
     private EditText yEdit;
     private TextView xTextView;
@@ -78,8 +73,8 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         typeRadioButton = findViewById(R.id.type);
         xEdit = findViewById(R.id.position_x);
         yEdit = findViewById(R.id.position_y);
-        strideEdit = findViewById(R.id.stride_length);
-        strideEdit.addTextChangedListener(textWatcher);
+        //strideEdit = findViewById(R.id.stride_length);
+       // strideEdit.addTextChangedListener(textWatcher);
         xEdit.addTextChangedListener(textWatcher);
         yEdit.addTextChangedListener(textWatcher);
 
@@ -182,20 +177,20 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (editable.hashCode() == strideEdit.getText().hashCode()) {
-                if (strideEdit.getText().toString().trim().equals("")) {
-                    showToast("Stride length can't be null");
-                } else {
-                    float strideLength = Float.valueOf(strideEdit.getText().toString());
-                    mapView.setStride(strideLength);
-                }
-            } else if (ifUserInput) {
-                if (!xEdit.getText().toString().equals("") && !yEdit.getText().toString().equals("")) {
-                    PointF p = new PointF(Float.valueOf(xEdit.getText().toString()),
-                            Float.valueOf(yEdit.getText().toString()));
-                    mapView.setCurrentTPosition(p);
-                }
-            }
+//            if (editable.hashCode() == strideEdit.getText().hashCode()) {
+//                if (strideEdit.getText().toString().trim().equals("")) {
+//                    showToast("Stride length can't be null");
+//                } else {
+//                    //float strideLength = Float.valueOf(strideEdit.getText().toString());
+//                    //mapView.setStride(strideLength);
+//                }
+//            } else if (ifUserInput) {
+//                if (!xEdit.getText().toString().equals("") && !yEdit.getText().toString().equals("")) {
+//                    PointF p = new PointF(Float.valueOf(xEdit.getText().toString()),
+//                            Float.valueOf(yEdit.getText().toString()));
+//                    mapView.setCurrentTPosition(p);
+//                }
+//            }
         }
     };
 
@@ -208,9 +203,9 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
             case R.id.pick_map_button:
                 selectMapFromPhone();
                 break;
-            case R.id.help_stride:
-                showToast(getResources().getString(R.string.help_stride));
-                break;
+//            case R.id.help_stride:
+//                showToast(getResources().getString(R.string.help_stride));
+//                break;
             case R.id.help_data:
                 showToast(getResources().getString(R.string.help_data));
                 break;
@@ -381,7 +376,8 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
                         if (mapView.isReady()) {
-                            mapView.moveBySingleTap(e);
+                            //mapView.moveBySingleTap(e); //Original
+                            mapView.moveToPosition(e); //Added
                             setTextWithoutTriggerListener();
                         } else {
                             Toast.makeText(getApplicationContext(), "Single tap: Image not ready", Toast.LENGTH_SHORT).show();

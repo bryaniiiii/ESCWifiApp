@@ -41,22 +41,27 @@ public class CoordManager {
     void moveBySingleTap(PointF tapSCoord) {
         float deltaX = tapSCoord.x - currentSCoord.x;
         float deltaY = tapSCoord.y - currentSCoord.y;
-
         float moveX = Math.abs(deltaX) >= Math.abs(deltaY) ? (deltaX > 0 ? 1 : -1) * stride * widthScale : 0;
         float moveY = Math.abs(deltaX) >= Math.abs(deltaY) ? 0 : (deltaY > 0 ? 1 : -1) * stride * heightScale;
-
         moveInsideMapRange(moveX, moveY);
     }
 
+    void moveToPosition(PointF tapSCoord) {
+        moveInsideMapRange(tapSCoord.x, tapSCoord.y);
+    }
+
+
     private void moveInsideMapRange(float moveX, float moveY) {
 
-        float temp = currentSCoord.x + moveX;
-        if (temp >= 0 && temp <= pixelWidth)
-            currentSCoord.x = temp;
-
-        temp = currentSCoord.y + moveY;
-        if (temp >= 0 && temp <= pixelHeight)
-            currentSCoord.y = temp;
+//        float temp = currentSCoord.x + moveX;
+//        if (temp >= 0 && temp <= pixelWidth)
+//            currentSCoord.x = temp;
+//
+//        temp = currentSCoord.y + moveY;
+//        if (temp >= 0 && temp <= pixelHeight)
+//            currentSCoord.y = temp;
+        currentSCoord.x = moveX;
+        currentSCoord.y = moveY;
 
         this.currentTCoord = sCoordToTCoord(currentSCoord);
     }

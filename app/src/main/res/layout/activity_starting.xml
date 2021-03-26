@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginTop="50dp">
 
 
     <Button
@@ -14,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:background="@color/purple_500"
+        android:background="@drawable/sign_in_button"
         android:text="Enter Mapping Phase"
         />
 
@@ -23,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:background="@color/purple_500"
+        android:background="@drawable/sign_in_button"
         android:text="JJ Phase"
         />
 
@@ -32,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:background="@color/purple_500"
+        android:background="@drawable/sign_in_button"
         android:text="Enter Testing Phase"
         />
     <Button
@@ -40,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:background="@color/purple_500"
+        android:background="@drawable/sign_in_button"
         android:text="Log Out"
         />
 
@@ -49,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:background="@color/purple_500"
+        android:background="@drawable/sign_in_button"
         android:text="Floor Plan"
         />
 

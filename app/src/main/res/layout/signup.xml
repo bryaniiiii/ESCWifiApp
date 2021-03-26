@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
 
     android:gravity="center"
-    android:background="@color/white"
+    android:background="@color/paper"
     android:paddingHorizontal="30dp"
     android:orientation="vertical">
 
@@ -44,7 +44,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         >
         <EditText
             android:id="@+id/password1"
@@ -68,7 +68,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         >
         <EditText
             android:id="@+id/password2"
@@ -95,7 +95,7 @@
         android:layout_height="60dp"
         android:text="Sign Up"
         android:textColor="@color/white"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/button_back"
         android:textSize="25dp"
         android:textAllCaps="false"/>

@@ -45,14 +45,14 @@ public class PinView extends SubsamplingScaleImageView {
         float density = getResources().getDisplayMetrics().densityDpi;
         setMaximumDpi((int) density);
 
-        currentPin = BitmapFactory.decodeResource(this.getResources(), R.drawable.location_marker);
-        float w = (density / 1500f) * currentPin.getWidth();
-        float h = (density / 1500f) * currentPin.getHeight();
+        currentPin = BitmapFactory.decodeResource(this.getResources(), R.drawable.current_point);
+        float w = (density / 3000f) * currentPin.getWidth();
+        float h = (density / 3000f) * currentPin.getHeight();
         currentPin = Bitmap.createScaledBitmap(currentPin, (int) w, (int) h, true);
 
-        completedPin = BitmapFactory.decodeResource(this.getResources(), R.drawable.completed_point);
-        w = (density / 6000) * completedPin.getWidth();
-        h = (density / 6000f) * completedPin.getHeight();
+        completedPin = BitmapFactory.decodeResource(this.getResources(), R.drawable.marked_point);
+        w = (density / 3000f) * completedPin.getWidth();
+        h = (density / 3000f) * completedPin.getHeight();
         completedPin = Bitmap.createScaledBitmap(completedPin, (int) w, (int) h, true);
     }
 
@@ -105,6 +105,12 @@ public class PinView extends SubsamplingScaleImageView {
     public PointF getEventPosition(MotionEvent e) {
         PointF sCoord = this.viewToSourceCoord(e.getX(), e.getY());
         return coordManager.sCoordToTCoord(sCoord);
+    }
+
+    public void moveToPosition(MotionEvent e) {
+        PointF sCoord = this.viewToSourceCoord(e.getX(), e.getY());
+        coordManager.moveToPosition(sCoord);
+        this.setCurrentTPosition(coordManager.getCurrentTCoord());
     }
 
     @Override

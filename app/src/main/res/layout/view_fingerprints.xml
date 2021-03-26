@@ -11,34 +11,15 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:id="@+id/wifiList"
+        android:id="@+id/view_fingerprints"
         android:layout_weight="0.97" />
 
-
-    <EditText
-        android:id="@+id/pointX"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:inputType="numberDecimal"
-        />
-    <EditText
-        android:id="@+id/pointY"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:inputType="numberDecimal"/>
-
-
     <Button
-        android:id="@+id/addPoint"
+        android:id="@+id/back"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="15dp"
-        android:background="@drawable/sign_in_button"
-        android:text="Add Point"
-        />
-
-
+        android:background="@color/purple_500"
+        android:text="Back" />
 
 </LinearLayout>
