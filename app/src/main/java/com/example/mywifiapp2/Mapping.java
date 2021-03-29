@@ -26,6 +26,7 @@ public class Mapping {
     private static HashMap<String,Integer> mac_rssi;
     private static HashMap<Point,HashMap> position_ap;
     static Map<String, HashMap> position_apclone = new HashMap<>();
+
     static List<String> ap_list;
     static List<Point> position_list;
     static int num_of_data;
@@ -83,9 +84,11 @@ public class Mapping {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println(position_apclone + "987654321");
+
                 long number = snapshot.getChildrenCount()+1;
-                database.child("Scan " + number ).setValue(position_apclone);
-            }
+
+                database.child("Scan " + number ).setValue(position_apclone);}
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

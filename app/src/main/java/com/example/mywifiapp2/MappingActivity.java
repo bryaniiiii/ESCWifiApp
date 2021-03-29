@@ -290,60 +290,40 @@ public class MappingActivity extends AppCompatActivity {
 //    };
 private void getWifiNetworksList() {
 
-
-    IntentFilter filter = new IntentFilter();
-    filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-    final WifiManager wifiManager =
-            (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-    registerReceiver(new BroadcastReceiver() {
-
-        @RequiresApi(api = Build.VERSION_CODES.R)
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            scanList = wifiManager.getScanResults();
-
-
-            currentCoord = new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString()));
-            locationNameString = locationName.getText().toString();
-            myMapper.add_data(currentCoord, scanList);
-
-            Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < scanList.size(); i++) {
-
-                String Mac_address = scanList.get(i).BSSID;
-                Integer rssi = scanList.get(i).level;
-                database.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.hasChild(Mac_address)){
-//                            database.child("Scan").child(locationNameString).child("MAC Address").child(Mac_address).setValue(rssi);
-//                            database.child("Scan").child(locationNameString).child("Coordinates").setValue(currentCoord);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
+    // perform 1 scan
+    WifiScan wifiScan = new WifiScan(getApplicationContext(),MappingActivity.this);
+    // store results of scan into wifiScan.scanList
+    wifiScan.getWifiNetworksList();
+    // store this list into scanList
+    scanList = wifiScan.getScanList();
+    currentCoord = new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString()));
+    locationNameString = locationName.getText().toString();
+    myMapper.add_data(currentCoord, scanList);
+    Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_SHORT).show();
+//            for (int i = 0; i < scanList.size(); i++) {
+//
+//                String Mac_address = scanList.get(i).BSSID;
+//                Integer rssi = scanList.get(i).level;
+//                database.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        if (!snapshot.hasChild(Mac_address)){
+////                            database.child("Scan").child(locationNameString).child("MAC Address").child(Mac_address).setValue(rssi);
+////                            database.child("Scan").child(locationNameString).child("Coordinates").setValue(currentCoord);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//
+//            }
 
 
 
 
-        }
-
-    }, filter);
-
-
-    boolean startScan = wifiManager.startScan();
-    if(!startScan){
-        Toast.makeText(MappingActivity.this,"Please Enable Access of Location",Toast.LENGTH_LONG).show();
-        Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(myIntent);
-    }
 
 }
 
