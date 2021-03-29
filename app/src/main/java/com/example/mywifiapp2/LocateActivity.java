@@ -90,11 +90,25 @@ public class LocateActivity extends AppCompatActivity {
         locateMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                locator = new Testing(results);
-//                currentCoordinates = locator.getPrediction();
-//                currentPosition.setText("You are currently positioned at coordinates" + currentCoordinates);
 
-
+                // perform 1 scan
+                WifiScan wifiScan = new WifiScan(getApplicationContext(),LocateActivity.this);
+                // store results of scan into wifiScan.scanList
+                wifiScan.getWifiNetworksList();
+                // store this list into scanList
+                List<ScanResult> scanList = wifiScan.getScanList();
+                if(scanList != null){
+                    // instantiate Test Object
+                    Testing testing = new Testing(scanList);
+                    // using predict() knn to predict where user is
+                    Point result = testing.predict();
+                    if(result.getX()<0 || result.getY()<0){
+                        Toast.makeText(LocateActivity.this, "Not able to make prediction for current position",Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        currentPosition.setText(result.toString());
+                    }
+                }
 
             }
         });

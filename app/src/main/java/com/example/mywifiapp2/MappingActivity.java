@@ -190,35 +190,38 @@ public class MappingActivity extends AppCompatActivity {
         saveMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-                final WifiManager wifiManager =
-                        (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                registerReceiver(new BroadcastReceiver() {
-
-                    @RequiresApi(api = Build.VERSION_CODES.R)
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-
-                        scanList = wifiManager.getScanResults();
-                        Testing tester = new Testing(scanList, myMapper);
-                        predictedCoord = tester.getPrediction(myMapper);
-                        System.out.println(predictedCoord + "123456789");
-
-
-                    }
-
-                }, filter);
-
-
-                boolean startScan = wifiManager.startScan();
-                if(!startScan){
-                    Toast.makeText(MappingActivity.this,"Please Enable Access of Location",Toast.LENGTH_LONG).show();
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(myIntent);
+//                IntentFilter filter = new IntentFilter();
+//                filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+//                final WifiManager wifiManager =
+//                        (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//                registerReceiver(new BroadcastReceiver() {
+//
+//                    @RequiresApi(api = Build.VERSION_CODES.R)
+//                    @Override
+//                    public void onReceive(Context context, Intent intent) {
+//
+//                        scanList = wifiManager.getScanResults();
+//                        Testing tester = new Testing(scanList, myMapper);
+//                        predictedCoord = tester.getPrediction(myMapper);
+//                        System.out.println(predictedCoord + "123456789");
+//
+//
+//                    }
+//
+//                }, filter);
+//
+//
+//                boolean startScan = wifiManager.startScan();
+//                if(!startScan){
+//                    Toast.makeText(MappingActivity.this,"Please Enable Access of Location",Toast.LENGTH_LONG).show();
+//                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                    startActivity(myIntent);
+                myMapper.send_data_to_database();
+                Intent intent = new Intent(MappingActivity.this,StartingActivity.class);
+                startActivity(intent);
                 }
 
-            }
+
         });
         buttonClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,8 +317,8 @@ private void getWifiNetworksList() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (!snapshot.hasChild(Mac_address)){
-                            database.child("Scan").child(locationNameString).child("MAC Address").child(Mac_address).setValue(rssi);
-                            database.child("Scan").child(locationNameString).child("Coordinates").setValue(currentCoord);
+//                            database.child("Scan").child(locationNameString).child("MAC Address").child(Mac_address).setValue(rssi);
+//                            database.child("Scan").child(locationNameString).child("Coordinates").setValue(currentCoord);
                         }
                     }
 
