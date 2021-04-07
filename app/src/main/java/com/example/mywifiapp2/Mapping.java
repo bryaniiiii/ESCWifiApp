@@ -10,12 +10,32 @@ import java.util.List;
 
 public class Mapping {
 
-    private static HashMap<String,Integer> mac_rssi;
-    private static HashMap<Point,HashMap> position_ap;
-    static List<String> ap_list;
-    static List<Point> position_list;
-    static int num_of_data;
+    private HashMap<String,Integer> mac_rssi;
+    private HashMap<Point,HashMap> position_ap;
+    private List<String> ap_list;
+    private List<Point> position_list;
 
+    public HashMap<String, Integer> getMac_rssi() {
+        return mac_rssi;
+    }
+
+    public HashMap<Point, HashMap> getPosition_ap() {
+        return position_ap;
+    }
+
+    public List<String> getAp_list() {
+        return ap_list;
+    }
+
+    public List<Point> getPosition_list() {
+        return position_list;
+    }
+
+    public int getNum_of_data() {
+        return num_of_data;
+    }
+
+    private int num_of_data;
 
     static NeuralNetwork nn;
 
@@ -25,11 +45,15 @@ public class Mapping {
         position_list = new ArrayList<>();
         ap_list = new ArrayList<>();
         num_of_data = 0;
-
     }
 
     /**
      * Collect data from wifi scan results (bssid, rssi) and map it with its position on the floor map (x,y)*/
+    /**
+     * User inputs position on the map, along with the obtained scanResult at that position
+     * @param position
+     * @param scanResult
+     */
 
     public void add_data(Point position, List<ScanResult> scanResult){
 
@@ -47,6 +71,7 @@ public class Mapping {
 
         // add mac_rssi entry to global position_ap hashmap (position : mac_rssi)
         position_ap.put(position, mac_rssi);
+        position_list.add(position);
         Log.i("TEST","position: " + position.toString());
         Log.i("TEST","wifi ap: " + mac_rssi.toString());
         Log.i("TEST",position_ap.toString());
@@ -55,21 +80,37 @@ public class Mapping {
         num_of_data++;
     }
 
+    public void send_data_to_database(){
+        // maybe send position_ap HashMap oxo
+    }
+
     /**
      * Based on receiving data(list of bssid), get appropriate data set from database*/
-    public static HashMap<Point,HashMap> get_data(List<String> bssid){
+
+    /**
+     *
+     * @param bssid
+     * @return dataset, a hashmap containing point x,y and a hashmap (BSSID : RSSI)
+     */
+    public HashMap<Point,HashMap> get_data_for_testing(List<String> bssid){
         HashMap<Point,HashMap> dataSet = new HashMap<>();
 
         for(int i =0; i<num_of_data; i++){
             HashMap<String,Integer> ap_info = new HashMap<>();
             for(String j: bssid){
+
+                // if position_ap contains this particular BSSID, j
+                // if the inner hashmap BSSID: RSSI contains key bssid
                 if(position_ap.get(position_list.get(i)).containsKey(j)){
+                    // put this bssid: RSSI into ap_info
                     ap_info.put(j,(int)position_ap.get(position_list.get(i)).get(j));
                 }
                 else{
                     break;
                 }
                 if(ap_info.size()==bssid.size()){
+                    // dataSet is a Hashmap containing
+                    // position : ap_info (bssid : RSSI)
                     dataSet.put(position_list.get(i),ap_info);
                 }
             }
@@ -91,9 +132,9 @@ public class Mapping {
 
     /**
      * Used in Neural Network model, train model using the data set that is obtained in get_data*/
-    public static NeuralNetwork train_data(List<String> bssid){
+    public NeuralNetwork train_data(List<String> bssid){
 
-        HashMap<Point,HashMap> dataSet = get_data(bssid);
+        HashMap<Point,HashMap> dataSet = get_data_for_testing(bssid);
         ArrayList<Point> positionSet = new ArrayList<Point>(dataSet.keySet());
         int num_of_positions = dataSet.size();
         int num_of_bssids = bssid.size();
@@ -119,7 +160,8 @@ public class Mapping {
                  *  ......          * ......         * ......         * ......         * ......       *
                  **************************************************************************************
                  (length : num of positions) */
-                x[i][j]= (double)dataSet.get(positionSet.get(i)).get(bssid.get(j));
+                x[i][j]= (double)((Integer)dataSet.get(positionSet.get(i)).get(bssid.get(j)));
+
             }
         }
 

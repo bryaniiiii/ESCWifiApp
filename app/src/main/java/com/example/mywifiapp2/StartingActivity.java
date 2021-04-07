@@ -48,7 +48,6 @@ public class StartingActivity extends AppCompatActivity {
                 finish();
             }
         });
-
         locateMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,15 +68,7 @@ public class StartingActivity extends AppCompatActivity {
         mapMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MappingActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        floorPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FloorplanActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ChooseImage.class);
                 startActivity(intent);
             }
         });
