@@ -110,9 +110,9 @@ public class LocateActivity extends AppCompatActivity {
                 if(scanList != null){
                     System.out.println("scanlist is not empty");
                     // instantiate Test Object
-                    Testing testing = new Testing(scanList);
+
                     // using predict() knn to predict where user is
-                    Point result = null;
+
                     bssid = new ArrayList<>();
                     bssid_rssi = new HashMap<>();
                     // from the scanResults obtained, generate hashmap and List

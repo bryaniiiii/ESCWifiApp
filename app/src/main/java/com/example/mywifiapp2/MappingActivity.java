@@ -79,7 +79,7 @@ public class MappingActivity extends AppCompatActivity {
     // create reference to firebase, create wifi header
 
 
-
+    private Button scan;
     private StringBuilder stringBuilder = new StringBuilder();
     private TextView textViewWifiNetworks;
     private Button buttonClick;
@@ -92,6 +92,7 @@ public class MappingActivity extends AppCompatActivity {
     private String locationNameString;
     private Button saveMap;
     private Mapping myMapper = new Mapping();
+
     Point predictedCoord;
 
     @Override
@@ -104,6 +105,7 @@ public class MappingActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
         pointX = findViewById(R.id.pointX);
         pointY = findViewById(R.id.pointY);
+        scan = findViewById(R.id.scan);
         locationName = findViewById(R.id.locationName);
         storage = FirebaseStorage.getInstance().getReference(user.getUid());
 
@@ -225,10 +227,22 @@ public class MappingActivity extends AppCompatActivity {
         buttonClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 getWifiNetworksList();
 
 
 
+
+            }
+        });
+
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanList=null;
+                scanWifi();
+                Toast.makeText(getApplicationContext(), "Wifi Scanned", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -287,14 +301,21 @@ public class MappingActivity extends AppCompatActivity {
 //            }
 //        }
 //    };
+
+    private List<ScanResult> scanWifi(){
+        // perform 1 scan
+        WifiScan wifiScan = new WifiScan(getApplicationContext(),MappingActivity.this);
+        // store results of scan into wifiScan.scanList
+        wifiScan.getWifiNetworksList();
+        // store this list into scanList
+        scanList = wifiScan.getScanList();
+        return scanList;
+
+
+    }
 private void getWifiNetworksList() {
 
-    // perform 1 scan
-    WifiScan wifiScan = new WifiScan(getApplicationContext(),MappingActivity.this);
-    // store results of scan into wifiScan.scanList
-    wifiScan.getWifiNetworksList();
-    // store this list into scanList
-    scanList = wifiScan.getScanList();
+
     if (scanList != null){
     currentCoord = new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString()));
     locationNameString = locationName.getText().toString();

@@ -18,7 +18,7 @@
     <EditText
         android:id="@+id/locationName"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="25dp"
         android:layout_margin="15dp"
         android:inputType="text"
 
@@ -27,7 +27,7 @@
     <EditText
         android:id="@+id/pointX"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="25dp"
         android:layout_margin="15dp"
         android:inputType="numberDecimal"
 
@@ -36,7 +36,7 @@
     <EditText
         android:id="@+id/pointY"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="25dp"
         android:layout_margin="15dp"
         android:inputType="numberDecimal"
 />
@@ -47,6 +47,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CLICK"
+        />
+    <Button
+        android:id="@+id/scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SCAN"
         />
     <Button
         android:id="@+id/saveMap"
