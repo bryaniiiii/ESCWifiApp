@@ -217,8 +217,7 @@ public class MappingActivity extends AppCompatActivity {
 //                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //                    startActivity(myIntent);
                 myMapper.send_data_to_database();
-                Intent intent = new Intent(MappingActivity.this,StartingActivity.class);
-                startActivity(intent);
+                Log.i("TESTING", "This has been clicked");
                 }
 
 
@@ -296,10 +295,11 @@ private void getWifiNetworksList() {
     wifiScan.getWifiNetworksList();
     // store this list into scanList
     scanList = wifiScan.getScanList();
+    if (scanList != null){
     currentCoord = new Point(Double.parseDouble(pointX.getText().toString()), Double.parseDouble(pointY.getText().toString()));
     locationNameString = locationName.getText().toString();
     myMapper.add_data(currentCoord, scanList);
-    Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_SHORT).show();}
 //            for (int i = 0; i < scanList.size(); i++) {
 //
 //                String Mac_address = scanList.get(i).BSSID;

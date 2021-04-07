@@ -6,6 +6,7 @@
     <TextView
         android:id="@+id/currentLocation"
         android:layout_width="match_parent"
+        android:textColor="@color/white"
         android:layout_height="100dp"
         android:layout_margin="15dp"/>
     <Button
@@ -15,5 +16,13 @@
         android:layout_margin="15dp"
         android:background="@color/purple_500"
         android:text="Locate Me"
+        />
+    <Button
+        android:id="@+id/scanme"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@color/purple_500"
+        android:text="Scan Me"
         />
 </LinearLayout>
