@@ -5,6 +5,9 @@ import android.os.Environment;
 
 import com.example.mywifiapp2.wapcollector.Fingerprint;
 import com.example.mywifiapp2.wapcollector.XWiFi;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +24,7 @@ import java.util.Locale;
 
 public class Logger {
     private static String TAG = "Logger";
+
 
     private static String getRootDir() {
         return Environment.getExternalStorageDirectory() + "/OpenCollector";

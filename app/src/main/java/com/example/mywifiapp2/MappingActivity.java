@@ -83,9 +83,6 @@ public class MappingActivity extends AppCompatActivity {
 
             wifiManager.startScan();
             Toast.makeText(this, "Scanning Wifi...", Toast.LENGTH_SHORT).show();
-
-
-
     }
 
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {

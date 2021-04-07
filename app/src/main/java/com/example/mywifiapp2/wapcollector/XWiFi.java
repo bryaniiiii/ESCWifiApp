@@ -1,24 +1,28 @@
 package com.example.mywifiapp2.wapcollector;
 
-import java.util.ArrayList;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class XWiFi {
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class XWiFi{
     public String mac;
     public int rssi;
     public ArrayList<Integer> rssiList;
 
-    XWiFi(){
+    public XWiFi(){
         rssiList = new ArrayList<>();
     }
 
-    XWiFi(String mac, int rssi) {
+    public XWiFi(String mac, int rssi) {
         this.mac = mac;
         this.rssi = rssi;
         rssiList = new ArrayList<>();
         rssiList.add(rssi);
     }
 
-    public String toString() {
-        return String.format("mac:%s rssi:%d", mac, rssi);
+    public int getRssi() {
+        return rssi;
     }
 }

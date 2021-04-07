@@ -89,7 +89,7 @@
         android:text="Sign In"
         android:textColor="#ffffff"
         android:layout_marginTop="20dp"
-        android:background="@drawable/sign_in_button"
+        android:background="@drawable/ripple_effect"
         android:textSize="25dp"
         android:textAllCaps="false"/>
 
