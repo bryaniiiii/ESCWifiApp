@@ -1,6 +1,7 @@
 package com.example.mywifiapp2;
 
 import android.net.wifi.ScanResult;
+import android.util.Log;
 
 
 import java.util.ArrayList;
@@ -30,19 +31,26 @@ public class Mapping {
     /**
      * Collect data from wifi scan results (bssid, rssi) and map it with its position on the floor map (x,y)*/
 
-    public static void add_data(Point position, List<ScanResult> scanResult){
+    public void add_data(Point position, List<ScanResult> scanResult){
 
         mac_rssi = new HashMap<>();
+
+        // for 1 scan result itself, add the BSSID (MAC) and corresponding RSSI to mac_rssi hashmap
         for(ScanResult ap:scanResult){
             if(20<Math.abs(ap.level)&&Math.abs(ap.level)<100){
                 mac_rssi.put(ap.BSSID,ap.level);
-
             }
             if(!ap_list.contains(ap.BSSID)){
                 ap_list.add(ap.BSSID);
             }
         }
+
+        // add mac_rssi entry to global position_ap hashmap (position : mac_rssi)
         position_ap.put(position, mac_rssi);
+        Log.i("TEST","position: " + position.toString());
+        Log.i("TEST","wifi ap: " + mac_rssi.toString());
+        Log.i("TEST",position_ap.toString());
+        System.out.println("\n");
 
         num_of_data++;
     }
