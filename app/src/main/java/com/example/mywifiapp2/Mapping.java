@@ -104,8 +104,8 @@ public class Mapping {
     /**
      * Based on receiving data(list of bssid), get appropriate data set from database*/
     public interface OnDataLoadedListener{
-        public void onFinishLoading(HashMap<Point,HashMap> dataSet);
-        public void onCancelled(DatabaseError error);
+        public Point onFinishLoading(HashMap<Point,HashMap> dataSet);
+        public Point onCancelled(DatabaseError error);
     }
     /**
      *
@@ -142,7 +142,7 @@ public class Mapping {
                 if(listener != null) listener.onCancelled(error);
             }
         });
-        System.out.println("after listener" +dataSet);
+
         /*for(int i =0; i<num_of_data; i++){
             HashMap<String,Integer> ap_info = new HashMap<>();
             for(String j: bssid){

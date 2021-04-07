@@ -51,6 +51,7 @@ public class LocateActivity extends AppCompatActivity {
     private Testing locator;
     private TextView currentPosition;
     private Point currentCoordinates;
+    private HashMap<String,Integer> bssid_rssi;
     private Button locateMe;
     private Button scanMe;
     private ListView listView;
@@ -61,6 +62,7 @@ public class LocateActivity extends AppCompatActivity {
     private ArrayList<WifiAP> arrayList = new ArrayList<>();
     private ArrayAdapter adapter;
     private List<ScanResult> scanList;
+    private List<String> bssid;
     //    private HashMap locationFirebase;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
 
@@ -111,18 +113,83 @@ public class LocateActivity extends AppCompatActivity {
                     Testing testing = new Testing(scanList);
                     // using predict() knn to predict where user is
                     Point result = null;
-                    try {
-                        result = testing.predict();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    bssid = new ArrayList<>();
+                    bssid_rssi = new HashMap<>();
+                    // from the scanResults obtained, generate hashmap and List
+                    for(ScanResult ap: scanList){
+                        if(20<Math.abs(ap.level)&&Math.abs(ap.level)<100){
+                            bssid_rssi.put(ap.BSSID, ap.level);
+                            bssid.add(ap.BSSID);
+                        }
                     }
-                    System.out.println("92383312 result calculated");
-                    if(result.getX()<0 || result.getY()<0){
-                        Toast.makeText(LocateActivity.this, "Not able to make prediction for current position",Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        currentPosition.setText(result.toString());
-                    }
+                    Mapping.get_data_for_testing(bssid, new Mapping.OnDataLoadedListener() {
+                        @Override
+                        public Point onFinishLoading(HashMap<Point, HashMap> dataSet) {
+                            HashMap<Point, HashMap> dataSet2 = dataSet;
+                            if (!dataSet2.isEmpty()) {
+                                System.out.println("9999922222" + dataSet2);// Need to retrieve data from database first!! (either done here or in the testingMode activity)
+                                ArrayList<Point> positionSet = new ArrayList<Point>(dataSet2.keySet());
+                                int num_of_positions = dataSet2.size();
+                                int num_of_bssids = bssid.size();
+
+                                float nearest1 = Float.MAX_VALUE;
+                                float nearest2 = Float.MAX_VALUE;
+
+                                Point nearest1_position = new Point(0, 0);
+                                Point nearest2_position = new Point(0, 0);
+
+                                int sum = 0;
+//        if (dataSet.isEmpty()) {
+//            return new Point(-1, -1);
+//        } else {
+                                for (int i = 0; i < num_of_positions; i++) {
+                                    for (int j = 0; j < num_of_bssids; j++) {
+                                        sum += Math.pow((((Long) dataSet2.get(positionSet.get(i)).get(bssid.get(i))).intValue() - bssid_rssi.get(bssid.get(j))), 2);
+                                    }
+                                    float dev = (float) Math.sqrt(sum);
+                                    if (dev < nearest1) {
+                                        nearest1 = dev;
+                                        nearest1_position = positionSet.get(i);
+                                    } else if (dev < nearest2) {
+                                        nearest2 = dev;
+                                        nearest2_position = positionSet.get(i);
+                                    }
+                                    sum = 0;
+                                }
+//        }
+
+
+                                double x = nearest1_position.getX() * nearest1 / (nearest1 + nearest2) +
+                                        nearest2_position.getX() * nearest2 / (nearest1 + nearest2);
+                                double y = nearest1_position.getY() * nearest1 / (nearest1 + nearest2) +
+                                        nearest2_position.getY() * nearest2 / (nearest1 + nearest2);
+                                currentPosition.setText(new Point(x, y).toString());
+                                return new  Point(x, y);
+
+                            }
+                            else{
+                                System.out.println("9992 coord not calculated"  );
+                                currentPosition.setText(new Point(-1, -1).toString());
+                                return new Point(-1, -1);
+
+                            }
+                        }
+
+                        @Override
+                        public Point onCancelled(DatabaseError error) {
+                            System.out.println("9992 database error");
+                            currentPosition.setText(new Point(-1, -1).toString());
+                            return new Point(-1, -1);
+
+                        }
+                    });
+//                    System.out.println("92383312 result calculated" + result);
+//                    if(result.getX()<0 || result.getY()<0){
+//                        Toast.makeText(LocateActivity.this, "Not able to make prediction for current position",Toast.LENGTH_LONG).show();
+//                    }
+//                    else{
+//                        currentPosition.setText(result.toString());
+//                    }
                 }
 
 

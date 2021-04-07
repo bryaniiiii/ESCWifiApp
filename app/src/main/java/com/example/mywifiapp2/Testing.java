@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 public class Testing {
 
     double[] x;
-    private Point currentcoord;
     // initialise hashmap and list of bssid
     private HashMap<String,Integer> bssid_rssi;
     private List<String> bssid;
@@ -54,71 +53,71 @@ public class Testing {
      * 1. Calculate dev = sqrt((rss1-rss1')^2+(rss2-rss2')^2+......) for every position in the data set
      * 2. Compare dev, find the smallest and the second smallest and their positions
      * 3. Make prediction of current positions based on the positions found with smallest and second smallest dev*/
-    public Point predict() throws InterruptedException {
-        /**
-         Need to retrieve data from database first!! (either done here or in the testingMode activity)
-         */
-
-        Mapping.get_data_for_testing(bssid, new Mapping.OnDataLoadedListener() {
-            @Override
-            public void onFinishLoading(HashMap<Point, HashMap> dataSet) {
-                HashMap<Point, HashMap> dataSet2 = dataSet;
-                if (!dataSet2.isEmpty()) {
-                    System.out.println("9999922222" + dataSet2);// Need to retrieve data from database first!! (either done here or in the testingMode activity)
-                    ArrayList<Point> positionSet = new ArrayList<Point>(dataSet2.keySet());
-                    int num_of_positions = dataSet2.size();
-                    int num_of_bssids = bssid.size();
-
-                    float nearest1 = Float.MAX_VALUE;
-                    float nearest2 = Float.MAX_VALUE;
-
-                    Point nearest1_position = new Point(0, 0);
-                    Point nearest2_position = new Point(0, 0);
-
-                    int sum = 0;
-//        if (dataSet.isEmpty()) {
-//            return new Point(-1, -1);
-//        } else {
-                    for (int i = 0; i < num_of_positions; i++) {
-                        for (int j = 0; j < num_of_bssids; j++) {
-                            sum += Math.pow((((Long) dataSet2.get(positionSet.get(i)).get(bssid.get(i))).intValue() - bssid_rssi.get(bssid.get(j))), 2);
-                        }
-                        float dev = (float) Math.sqrt(sum);
-                        if (dev < nearest1) {
-                            nearest1 = dev;
-                            nearest1_position = positionSet.get(i);
-                        } else if (dev < nearest2) {
-                            nearest2 = dev;
-                            nearest2_position = positionSet.get(i);
-                        }
-                        sum = 0;
-                    }
-//        }
-
-
-                    double x = nearest1_position.getX() * nearest1 / (nearest1 + nearest2) +
-                            nearest2_position.getX() * nearest2 / (nearest1 + nearest2);
-                    double y = nearest1_position.getY() * nearest1 / (nearest1 + nearest2) +
-                            nearest2_position.getY() * nearest2 / (nearest1 + nearest2);
-                    currentcoord = new Point(x, y);
-                    System.out.println("9992 coord calculated" + currentcoord);
-                }
-                else{
-                    currentcoord = new Point(-1, -1);
-                    System.out.println("9992 coord not calculated" );
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                System.out.println("Database Error");
-                currentcoord = new Point(-1, -1);
-                System.out.println("9992 database error");
-            }
-        });
-
-        System.out.println("9992 after all the methods, end of predict()" +currentcoord);
-        return currentcoord;
-
-    }
+//    public Point predict() throws InterruptedException {
+//        /**
+//         Need to retrieve data from database first!! (either done here or in the testingMode activity)
+//         */
+//
+//        Mapping.get_data_for_testing(bssid, new Mapping.OnDataLoadedListener() {
+//            @Override
+//            public Point onFinishLoading(HashMap<Point, HashMap> dataSet) {
+//                HashMap<Point, HashMap> dataSet2 = dataSet;
+//                if (!dataSet2.isEmpty()) {
+//                    System.out.println("9999922222" + dataSet2);// Need to retrieve data from database first!! (either done here or in the testingMode activity)
+//                    ArrayList<Point> positionSet = new ArrayList<Point>(dataSet2.keySet());
+//                    int num_of_positions = dataSet2.size();
+//                    int num_of_bssids = bssid.size();
+//
+//                    float nearest1 = Float.MAX_VALUE;
+//                    float nearest2 = Float.MAX_VALUE;
+//
+//                    Point nearest1_position = new Point(0, 0);
+//                    Point nearest2_position = new Point(0, 0);
+//
+//                    int sum = 0;
+////        if (dataSet.isEmpty()) {
+////            return new Point(-1, -1);
+////        } else {
+//                    for (int i = 0; i < num_of_positions; i++) {
+//                        for (int j = 0; j < num_of_bssids; j++) {
+//                            sum += Math.pow((((Long) dataSet2.get(positionSet.get(i)).get(bssid.get(i))).intValue() - bssid_rssi.get(bssid.get(j))), 2);
+//                        }
+//                        float dev = (float) Math.sqrt(sum);
+//                        if (dev < nearest1) {
+//                            nearest1 = dev;
+//                            nearest1_position = positionSet.get(i);
+//                        } else if (dev < nearest2) {
+//                            nearest2 = dev;
+//                            nearest2_position = positionSet.get(i);
+//                        }
+//                        sum = 0;
+//                    }
+////        }
+//
+//
+//                    double x = nearest1_position.getX() * nearest1 / (nearest1 + nearest2) +
+//                            nearest2_position.getX() * nearest2 / (nearest1 + nearest2);
+//                    double y = nearest1_position.getY() * nearest1 / (nearest1 + nearest2) +
+//                            nearest2_position.getY() * nearest2 / (nearest1 + nearest2);
+//                    return new Point(x, y);
+//
+//                }
+//                else{
+//                    System.out.println("9992 coord not calculated"  );
+//                    return new Point(-1, -1);
+//
+//                }
+//            }
+//
+//            @Override
+//            public Point onCancelled(DatabaseError error) {
+//                System.out.println("9992 database error");
+//                return new Point(-1, -1);
+//
+//            }
+//        });
+//
+//       return;
+//
+//    }
 }
