@@ -37,7 +37,6 @@ public class StartingActivity extends AppCompatActivity {
         jjmap = findViewById(R.id.jjmap);
         locateMe = findViewById(R.id.locateme);
         logout = findViewById(R.id.logout);
-        floorPlan = findViewById(R.id.floorplan);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
