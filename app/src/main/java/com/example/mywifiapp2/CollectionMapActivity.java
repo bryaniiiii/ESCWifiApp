@@ -83,7 +83,6 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_fingerprint);
         mapView = findViewById(R.id.mapImageView);
         viewFingerprints_button = findViewById(R.id.viewfingerprints);
-
         startButton = findViewById(R.id.start_collect);
 
         typeRadioButton = findViewById(R.id.type);
@@ -277,9 +276,11 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         String type = typeRadioButton.isChecked() ? "train" : "test";
         List<Fingerprint> fingerprints = new ArrayList<>();
         for (PointF p : Logger.getCollectedGrid(type)) {
-            int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
-            fingerprints.add(new Fingerprint(String.valueOf(fingerprint_count), p.x, p.y));
-            ((GlobalVariables) this.getApplication()).add_fingerprint_count();
+            //int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
+            //fingerprints.add(new Fingerprint(String.valueOf(fingerprint_count), p.x, p.y));
+            //((GlobalVariables) this.getApplication()).add_fingerprint_count();
+            String name = String.valueOf(p.x) + "," + String.valueOf(p.y);
+            fingerprints.add(new Fingerprint(name, p.x, p.y));
         }
 
         mapView.setFingerprintPoints(fingerprints);
@@ -371,21 +372,23 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         PointF pos = mapView.getCurrentTCoord();
         Point currentCoord = new Point((double)pos.x, (double)pos.y);
 
-        int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
+        //int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
 
-        Fingerprint fingerprint = new Fingerprint(String.valueOf(fingerprint_count), pos.x, pos.y); //Create a new fingerprint and x and y coord
-        ((GlobalVariables) this.getApplication()).add_fingerprint_count();
+        String coordString = String.valueOf(pos.x).replace(".", ":") + "," + String.valueOf(pos.y).replace(".", ":");
+
+        Fingerprint fingerprint = new Fingerprint(coordString, pos.x, pos.y, wifiData); //Create a new fingerprint and x and y coord
+        //((GlobalVariables) this.getApplication()).add_fingerprint_count();
         fingerprint.wifiData = wifiData;
 
         String type = typeRadioButton.isChecked() ? "train" : "test";
         updateCollectStatus(fingerprint);
         Logger.saveFingerprintData(type, fingerprint);
-        for (int i = 0; i < fingerprint.wifiData.size(); i++){
+        for (int i = 0; i < wifiData.size(); i++){
             int rssi = fingerprint.wifiData.get(i).getRssi();
-            String Mac_address = fingerprint.wifiData.get(i).mac;
-            String locationNameString = String.valueOf(((GlobalVariables) this.getApplication()).get_fingerprint_count());
-            database.child("Fingerprints").child(locationNameString).child("MAC Address").child(Mac_address).setValue(rssi);
-            database.child("Fingerprints").child(locationNameString).child("Coordinates").setValue(currentCoord);
+            String mac_address = fingerprint.wifiData.get(i).mac;
+            //String locationNameString = String.valueOf(((GlobalVariables) this.getApplication()).get_fingerprint_count());
+            database.child("Scan 1").child(coordString).child(mac_address).setValue(rssi);
+            //database.child("Scan 1").child(locationNameString).child("Coordinates").setValue(currentCoord);
         }
     }
 
