@@ -1,33 +1,28 @@
-package com.example.mywifiapp2;
+package com.example.mywifiapp2.UI;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.example.mywifiapp2.ImageAdapter;
+import com.example.mywifiapp2.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-import com.example.mywifiapp2.MappingActivity;
-import com.example.mywifiapp2.R;
+import com.example.mywifiapp2.UI.MappingActivity;
 
 import java.util.ArrayList;
 
-public class ChooseFromStorage extends AppCompatActivity implements ImageAdapter.OnNoteListener{
+public class ChooseFromStorage extends AppCompatActivity implements ImageAdapter.OnNoteListener {
     RecyclerView recyclerView;
     RecyclerView.Adapter imageAdapter;
     RecyclerView.LayoutManager layoutManager;

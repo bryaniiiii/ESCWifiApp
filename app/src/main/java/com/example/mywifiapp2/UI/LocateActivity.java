@@ -1,4 +1,4 @@
-package com.example.mywifiapp2;
+package com.example.mywifiapp2.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mywifiapp2.Point;
+import com.example.mywifiapp2.R;
+import com.example.mywifiapp2.Testing;
+import com.example.mywifiapp2.WifiAP;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 //import com.google.firebase.database.DataSnapshot;

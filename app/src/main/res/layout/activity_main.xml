@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".UI.MainActivity"
     android:gravity="center"
     android:background="@color/white"
     android:paddingHorizontal="30dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/main">
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,7 +18,8 @@
         android:text="Sign In"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:textSize="40dp"/>
+        android:textSize="40dp"
+        android:id="@+id/mainTitle"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,9 +104,4 @@
 
 
     </LinearLayout>
-
-
-
-
-
 </LinearLayout>

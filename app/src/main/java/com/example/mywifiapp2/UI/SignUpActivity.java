@@ -1,4 +1,4 @@
-package com.example.mywifiapp2;
+package com.example.mywifiapp2.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mywifiapp2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -53,16 +54,8 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
-
-
-
-
-
     }
+
     private void Register() {
         String email = emailEt.getText().toString();
         String password1 = passwordEt1.getText().toString();
@@ -107,9 +100,6 @@ public class SignUpActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
-
-
-
     }
     public Boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && PatternsCompat.EMAIL_ADDRESS.matcher(target).matches());

@@ -1,4 +1,4 @@
-package com.example.mywifiapp2;
+package com.example.mywifiapp2.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
@@ -11,43 +11,30 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.example.mywifiapp2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.example.mywifiapp2.Point;
-import com.example.mywifiapp2.ChooseFromStorage;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
 public class ChooseImage extends AppCompatActivity {
     private Uri mImageUri;
     private String URLlink;
@@ -68,9 +55,9 @@ public class ChooseImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_image);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
-        storage = FirebaseStorage.getInstance().getReference(user.getUid()).child("Upload");
+//        user = FirebaseAuth.getInstance().getCurrentUser();
+//        database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+//        storage = FirebaseStorage.getInstance().getReference(user.getUid()).child("Upload");
 
 
         DeviceUpload = findViewById(R.id.DeviceUpload);
@@ -85,65 +72,34 @@ public class ChooseImage extends AppCompatActivity {
         ConfirmImage.setVisibility(View.GONE);
         ChangeImage.setVisibility(View.GONE);
 
-        /*PreviewImage.setOnTouchListener(new View.OnTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getApplicationContext(),new GestureDetector.SimpleOnGestureListener(){
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    float x = e.getX();
-                    float y = e.getY();
-                    // Send the data to the database
-                    database.child("Scan").child("Scan Location").child("X").setValue(x);
-                    database.child("Scan").child("Scan Location").child("Y").setValue(y);
-                    Log.i("MAPPOSITION",PreviewImage.viewToSourceCoord(x,y).toString());
-                    super.onLongPress(e);
-                }
-            });
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return false;
-            }
-        });*/
-
-       /*
-        Either Upload a Map or choose a Map from the exisiting firebase storage
-         */
         DeviceUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileChoser();
+                openFileChooser();
                 DeviceUpload.setVisibility(View.GONE);
-
                 FirebaseUpload.setVisibility(View.GONE);
                 ConfirmImage.setVisibility(View.VISIBLE);
                 ChangeImage.setVisibility(View.VISIBLE);
             }
         });
 
-
-
         FirebaseUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+                storage = FirebaseStorage.getInstance().getReference(user.getUid()).child("Upload");
                 Intent intent = new Intent(ChooseImage.this, ChooseFromStorage.class);
                 startActivity(intent);
             }
-
-
         });
-
-
-
-
 
         ChangeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DeviceUpload.setVisibility(View.VISIBLE);
-
                 FirebaseUpload.setVisibility(View.VISIBLE);
-
                 ConfirmImage.setVisibility(View.GONE);
                 ChangeImage.setVisibility(View.GONE);
             }
@@ -168,7 +124,7 @@ public class ChooseImage extends AppCompatActivity {
                     }
                 });}
 
-                Intent intent = new Intent(ChooseImage.this,MappingActivity.class);
+                Intent intent = new Intent(ChooseImage.this, MappingActivity.class);
 
                 PreviewImage.buildDrawingCache();
                 Bitmap bitmap_device = PreviewImage.getDrawingCache();
@@ -181,7 +137,7 @@ public class ChooseImage extends AppCompatActivity {
         });
     }
 
-    private void openFileChoser() {
+    private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -229,9 +185,12 @@ public class ChooseImage extends AppCompatActivity {
             mImageUri = data.getData();
             PreviewImage.setImage(ImageSource.uri(mImageUri));
             //Picasso.with(this).load(mImageUri).into(PreviewImage);
-
-
+        }
+        else{
+            DeviceUpload.setVisibility(View.VISIBLE);
+            FirebaseUpload.setVisibility(View.VISIBLE);
+            ConfirmImage.setVisibility(View.GONE);
+            ChangeImage.setVisibility(View.GONE);
         }
     }
-
 }

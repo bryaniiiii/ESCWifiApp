@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 
 
-import com.example.mywifiapp2.SignUpActivity;
+import com.example.mywifiapp2.UI.SignUpActivity;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TextUtils.class)
