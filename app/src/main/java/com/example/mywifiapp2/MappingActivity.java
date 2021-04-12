@@ -140,7 +140,6 @@ public class MappingActivity extends AppCompatActivity {
                     }
                 });
             }
-
         }
 
 

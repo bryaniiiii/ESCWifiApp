@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ import com.example.mywifiapp2.wapcollector.IndoorCollectManager;
 import com.example.mywifiapp2.wapcollector.XWiFi;
 import com.example.mywifiapp2.mapview.PinView;
 import com.example.mywifiapp2.utils.Logger;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +48,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,8 +82,16 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
     SubsamplingScaleImageView imageToMap;
     StorageReference storage;
     Uri mImageUri;
-
     private IndoorCollectManager indoorCollectManager;
+
+    //private Uri mImageUri;
+    private String URLlink;
+    EditText URLEntry;
+    SubsamplingScaleImageView PreviewImage;
+    Button DeviceUpload, UrlUpload, ConfirmURL,ConfirmImage,ChangeImage, FirebaseUpload;
+
+    static String IMAGE_URL = "IMAGE_URL";
+    static String IMAGE_DEVICE = "IMAGE_DEVICE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +105,11 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         xEdit = findViewById(R.id.position_x);
         yEdit = findViewById(R.id.position_y);
         //strideEdit = findViewById(R.id.stride_length);
-       // strideEdit.addTextChangedListener(textWatcher);
+        // strideEdit.addTextChangedListener(textWatcher);
         xEdit.addTextChangedListener(textWatcher);
         yEdit.addTextChangedListener(textWatcher);
+        FloatingActionButton FirebaseUpload = findViewById(R.id.download_map_fab);
+        FirebaseUpload.bringToFront();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
@@ -114,15 +132,6 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        FloatingActionButton download_map_fab = (FloatingActionButton) findViewById(R.id.download_map_fab);
-        download_map_fab.bringToFront();
-        download_map_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //download from cloud
-            }
-        });
-
         FloatingActionButton delete_prev_fab = (FloatingActionButton) findViewById(R.id.delete_prev);
         delete_prev_fab.bringToFront();
         delete_prev_fab.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +146,7 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         delete_all_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectMapFromPhone();
+                database.child("Scan 1").removeValue();
             }
         });
 
@@ -152,6 +161,86 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         });
 
         requestPermissionBeforeStart();
+
+
+        //Bryan read uploaded map from Firebase
+        //==========================================================================================
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        storage = FirebaseStorage.getInstance().getReference(user.getUid()).child("Upload");
+
+        DeviceUpload = findViewById(R.id.DeviceUpload);
+
+        PreviewImage = (SubsamplingScaleImageView)findViewById(R.id.PreviewImage);
+        ConfirmImage = findViewById(R.id.button_confirm);
+        ChangeImage = findViewById(R.id.button_changeImage);
+
+        //ConfirmImage.setVisibility(View.GONE);
+        //ChangeImage.setVisibility(View.GONE);
+
+//        DeviceUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openFileChoser();
+//                DeviceUpload.setVisibility(View.GONE);
+//                FirebaseUpload.setVisibility(View.GONE);
+//                ConfirmImage.setVisibility(View.VISIBLE);
+//                ChangeImage.setVisibility(View.VISIBLE);
+//            }
+//        });
+
+        FirebaseUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CollectionMapActivity.this, ChooseMapFromFirebase.class);
+                startActivity(intent);
+            }
+        });
+
+//        ChangeImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DeviceUpload.setVisibility(View.VISIBLE);
+//                FirebaseUpload.setVisibility(View.VISIBLE);
+//                ConfirmImage.setVisibility(View.GONE);
+//                ChangeImage.setVisibility(View.GONE);
+//            }
+//        });
+
+//        ConfirmImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                storage = FirebaseStorage.getInstance().getReference(user.getUid()).child("Upload");
+//                if(mImageUri!= null){storage.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Toast.makeText(getApplicationContext(), "The Map has been uploaded into firebase", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(getApplicationContext(),"The Map has failed to be uploaded into firebase", Toast.LENGTH_SHORT).show();
+//                    }
+//                });}
+//
+//                Intent intent = new Intent(CollectionMapActivity.this, MappingActivity.class);
+//
+//                PreviewImage.buildDrawingCache();
+//                Bitmap bitmap_device = PreviewImage.getDrawingCache();
+//                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+//                bitmap_device.compress(Bitmap.CompressFormat.PNG,50,bs);
+//                intent.putExtra(IMAGE_DEVICE,bs.toByteArray());
+//                startActivity(intent);
+//            }
+//        });
+    }
+
+    private void openFileChoser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
     }
 
     //To solve some phone's cannot get the position permission, result will invoke "onRequestPermissionsResult"
@@ -292,6 +381,35 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, REQUEST_PICK_MAP);  //one can be replaced with any action code
+    }
+
+    public void readMapFromFirebase(){
+        showToast("Loading map from Firebase...");
+
+        Bundle b = getIntent().getExtras();
+        if ( b!= null){
+            if (b.getByteArray("IMAGE_DEVICE")!=null){
+                byte[] byteArray = b.getByteArray("IMAGE_DEVICE");
+
+                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                imageToMap.setImage(ImageSource.bitmap(bmp));}
+            else {
+                String newString = null;
+                newString = b.getString("Imageselected");
+                mImageUri = Uri.parse(newString);
+                ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(CollectionMapActivity.this).build();
+                ImageLoader imageLoader = ImageLoader.getInstance();
+                imageLoader.init(config);
+                imageLoader.loadImage(newString, new SimpleImageLoadingListener(){
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //super.onLoadingComplete(imageUri, view, loadedImage);
+                        imageToMap.setImage(ImageSource.bitmap(loadedImage));
+                    }
+                });
+            }
+        }
+
     }
 
     @Override
