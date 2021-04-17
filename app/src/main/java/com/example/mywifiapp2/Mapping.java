@@ -125,16 +125,11 @@ public class Mapping {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 System.out.println(snapshot + "9238 3312");
                 for (DataSnapshot snaps : snapshot.getChildren()) {
-                    double x = Double.parseDouble(snaps.getKey().substring(0, snaps.getKey().indexOf(",")));
-                    double y = Double.parseDouble(snaps.getKey().substring(snaps.getKey().indexOf(",") + 1));
+                    double x = Double.parseDouble(snaps.getKey().substring(0, snaps.getKey().indexOf(",")).replace(":","."));
+                    double y = Double.parseDouble(snaps.getKey().substring(snaps.getKey().indexOf(",") + 1).replace(":","."));
                             dataSet.put(new Point(x,y), (HashMap) snaps.getValue());
-
-
-
                 }
                 if(listener != null) listener.onFinishLoading(dataSet);
-
-
             }
 
             @Override

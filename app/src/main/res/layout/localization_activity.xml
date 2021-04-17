@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.example.mywifiapp2.CollectionMapActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin">
+
+        <TextView
+            android:id="@+id/currentLocation"
+            android:layout_width="match_parent"
+            android:textColor="@color/black"
+            android:layout_height="70dp"
+            android:layout_margin="15dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/locateme"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            app:rippleColor="@color/paper"
+            app:fabSize="auto"
+            app:maxImageSize="55dp"
+            android:scaleType="center"
+            android:backgroundTint="@color/maroon"
+            app:borderWidth="0dp"
+            android:contentDescription="Upload Map"
+            android:src="@drawable/app_logo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/load_localised_map_from_firebase"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            app:rippleColor="@color/paper"
+            app:fabSize="auto"
+            app:maxImageSize="38dp"
+            android:scaleType="center"
+            android:backgroundTint="@color/maroon"
+            app:borderWidth="0dp"
+            android:contentDescription="Upload Map"
+            android:src="@drawable/download_map" />
+
+        <com.example.mywifiapp2.mapview.PinView
+            android:id="@+id/mapImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:layout_gravity="end|bottom"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

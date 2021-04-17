@@ -51,37 +51,27 @@ import java.util.List;
 public class ChooseImage extends AppCompatActivity {
     private Uri mImageUri;
     private String URLlink;
-
     EditText URLEntry;
     SubsamplingScaleImageView PreviewImage;
     Button DeviceUpload, UrlUpload, ConfirmURL,ConfirmImage,ChangeImage, FirebaseUpload;
     FirebaseUser user;
     DatabaseReference database;
     StorageReference storage;
-
     static String IMAGE_URL = "IMAGE_URL";
     static String IMAGE_DEVICE = "IMAGE_DEVICE";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_image);
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
         storage = FirebaseStorage.getInstance().getReference(user.getUid()).child("Upload");
-
-
         DeviceUpload = findViewById(R.id.DeviceUpload);
-
         FirebaseUpload = findViewById(R.id.FirebaseUpload);
         PreviewImage = (SubsamplingScaleImageView)findViewById(R.id.PreviewImage);
-
         ConfirmImage = findViewById(R.id.button_confirm);
         ChangeImage = findViewById(R.id.button_changeImage);
-
-
         ConfirmImage.setVisibility(View.GONE);
         ChangeImage.setVisibility(View.GONE);
 
@@ -114,14 +104,11 @@ public class ChooseImage extends AppCompatActivity {
             public void onClick(View v) {
                 openFileChoser();
                 DeviceUpload.setVisibility(View.GONE);
-
                 FirebaseUpload.setVisibility(View.GONE);
                 ConfirmImage.setVisibility(View.VISIBLE);
                 ChangeImage.setVisibility(View.VISIBLE);
             }
         });
-
-
 
         FirebaseUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,21 +116,13 @@ public class ChooseImage extends AppCompatActivity {
                 Intent intent = new Intent(ChooseImage.this, ChooseFromStorage.class);
                 startActivity(intent);
             }
-
-
         });
-
-
-
-
 
         ChangeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DeviceUpload.setVisibility(View.VISIBLE);
-
                 FirebaseUpload.setVisibility(View.VISIBLE);
-
                 ConfirmImage.setVisibility(View.GONE);
                 ChangeImage.setVisibility(View.GONE);
             }

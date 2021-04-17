@@ -226,13 +226,7 @@ public class MappingActivity extends AppCompatActivity {
         buttonClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 getWifiNetworksList();
-
-
-
-
             }
         });
 

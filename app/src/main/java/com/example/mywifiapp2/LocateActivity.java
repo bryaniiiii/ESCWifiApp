@@ -1,15 +1,22 @@
 package com.example.mywifiapp2;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PointF;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,8 +26,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.example.mywifiapp2.mapview.PinView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,16 +39,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 //import com.google.firebase.database.DataSnapshot;
 //import com.google.firebase.database.DatabaseError;
 //import com.google.firebase.database.DatabaseReference;
 //import com.google.firebase.database.FirebaseDatabase;
 //import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -52,7 +71,10 @@ public class LocateActivity extends AppCompatActivity {
     private TextView currentPosition;
     private Point currentCoordinates;
     private HashMap<String,Integer> bssid_rssi;
-    private Button locateMe;
+    private FloatingActionButton locateMe;
+    private PinView mapView;
+    Uri mImageUri;
+
     private Button scanMe;
     private ListView listView;
     private Button buttonScan;
@@ -65,15 +87,16 @@ public class LocateActivity extends AppCompatActivity {
     private List<String> bssid;
     //    private HashMap locationFirebase;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
-
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("Users").child(user.getUid()).child("Scan 1");
+    FloatingActionButton FirebaseUpload;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_locate);
+        setContentView(R.layout.localization_activity);
+        mapView = (PinView) findViewById(R.id.mapImageView);
 //        buttonScan = findViewById(R.id.scan);
 //        locationName = findViewById(R.id.locationName);
 //        buttonScan.setOnClickListener(new View.OnClickListener() {
@@ -84,21 +107,28 @@ public class LocateActivity extends AppCompatActivity {
 //        });
 //        listView = findViewById(R.id.wifiList);
 
+
+
+        FirebaseUpload = (FloatingActionButton) findViewById(R.id.load_localised_map_from_firebase);
         currentPosition = findViewById(R.id.currentLocation);
-
-
 //        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
 //        listView.setAdapter(adapter);
-//
-//
-        scanMe = findViewById(R.id.scanme);
+        //scanMe = findViewById(R.id.scanme);
 
         locateMe = findViewById(R.id.locateme);
+//        scanMe.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                scanWifi();
+//            }
+//        });
 
-        scanMe.setOnClickListener(new View.OnClickListener() {
+
+        FirebaseUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanWifi();
+                Intent intent = new Intent(LocateActivity.this, TestingLoadSavedMap.class);
+                startActivity(intent);
             }
         });
 
@@ -106,7 +136,7 @@ public class LocateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
+                scanWifi();
                 if(scanList != null){
                     System.out.println("scanlist is not empty");
                     // instantiate Test Object
@@ -157,13 +187,12 @@ public class LocateActivity extends AppCompatActivity {
                                     sum = 0;
                                 }
 //        }
-
-
                                 double x = nearest1_position.getX() * nearest1 / (nearest1 + nearest2) +
                                         nearest2_position.getX() * nearest2 / (nearest1 + nearest2);
                                 double y = nearest1_position.getY() * nearest1 / (nearest1 + nearest2) +
                                         nearest2_position.getY() * nearest2 / (nearest1 + nearest2);
                                 currentPosition.setText(new Point(x, y).toString());
+                                mapView.setCurrentTPosition(new PointF((float)x, (float)y)); //JJ added in to try
                                 return new  Point(x, y);
 
                             }
@@ -191,24 +220,35 @@ public class LocateActivity extends AppCompatActivity {
 //                        currentPosition.setText(result.toString());
 //                    }
                 }
-
-
-
             }
         });
 
-
-
-
-
-
-
-
-
-
-
+        Bundle b = getIntent().getExtras();
+        if ( b!= null){
+//            newString = (String) b.get("Imageselected");
+//            mImageUri = Uri.parse(newString);
+            if (b.getByteArray("IMAGE_DEVICE")!=null){ //From device
+                byte[] byteArray = b.getByteArray("IMAGE_DEVICE");
+                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                mapView.setImage(ImageSource.bitmap(bmp));}
+            
+            else { //Loading the getExtras from Firebase
+                String newString = null;
+                newString = b.getString("Imageselected");
+                mImageUri = Uri.parse(newString);
+                ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(LocateActivity.this).build();
+                ImageLoader imageLoader = ImageLoader.getInstance();
+                imageLoader.init(config);
+                imageLoader.loadImage(newString,new SimpleImageLoadingListener(){
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        //super.onLoadingComplete(imageUri, view, loadedImage);
+                        mapView.setImage(ImageSource.bitmap(loadedImage));
+                    }
+                });
+            }
+        }
     }
-
 
     private void scanWifi() {
         // perform 1 scan
@@ -219,11 +259,64 @@ public class LocateActivity extends AppCompatActivity {
         scanList = wifiScan.getScanList();
         System.out.println("Scan Finished");
         System.out.println(scanList);
-
     }
 
+    private class LoadImage extends AsyncTask<String, Void, Bitmap> {
+        SubsamplingScaleImageView imageView;
+        URL url;
+        public LoadImage(SubsamplingScaleImageView PreviewImage){
+            this.imageView = PreviewImage;
+        }
 
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            String URLlink = strings[0];
+            Bitmap bitmap = null;
+            try {
+                if(!URLlink.isEmpty()){
+                    url = new URL(URLlink);
+                }
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                //InputStream inputStream = new java.net.URL(URLlink).openStream();
+                InputStream inputStream = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
 
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            mapView.setImage(ImageSource.bitmap(bitmap));
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+            mImageUri = data.getData();
+            mapView.setImage(ImageSource.uri(mImageUri));
+        }
+    }
+
+    private void loadMapImage(final Uri selectedImage, float width, float height) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (bitmap != null) {
+            mapView.setImage(ImageSource.bitmap(bitmap));
+            mapView.initialCoordManager(width, height);
+            mapView.setCurrentTPosition(new PointF(1.0f, 1.0f)); //initial current position
+        }
+    }
 }
 
 
