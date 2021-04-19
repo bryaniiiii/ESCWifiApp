@@ -69,7 +69,12 @@ public class XWiFiScanner extends Thread {
             timer.cancel();
             timer.purge();
             timer = null;
-            mContext.unregisterReceiver(wifiReceiver);
+            try{
+                mContext.unregisterReceiver(wifiReceiver);
+            } catch (Exception e){
+
+            }
+
         }
     }
 

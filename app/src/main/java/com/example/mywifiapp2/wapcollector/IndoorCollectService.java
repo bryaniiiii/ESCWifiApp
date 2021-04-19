@@ -41,9 +41,13 @@ public class IndoorCollectService extends Service {
     //Run when every time startService ready to receive start command
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.registerReceiver(cmdReceiver, cmdFilter);
 
-        Log.d(TAG, "service onStartCommand executed");
+        try{ //Try catch added by JJ to remove the scan fingeringprint crashing bug
+            this.registerReceiver(cmdReceiver, cmdFilter);
+            Log.d(TAG, "service onStartCommand executed");
+        } catch (Exception e){
+            Log.d(TAG, "java.lang.IllegalArgumentException: Receiver not registered");
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

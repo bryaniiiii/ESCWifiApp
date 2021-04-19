@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -29,6 +31,8 @@ import android.widget.Toast;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.example.mywifiapp2.mapview.PinView;
+import com.example.mywifiapp2.utils.Logger;
+import com.example.mywifiapp2.wapcollector.Fingerprint;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,6 +52,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 //import com.google.firebase.database.FirebaseDatabase;
 //import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -75,7 +80,7 @@ public class LocateActivity extends AppCompatActivity {
     private PinView mapView;
     Uri mImageUri;
 
-    private Button scanMe;
+    private FloatingActionButton scanMe;
     private ListView listView;
     private Button buttonScan;
     private EditText locationName;
@@ -90,6 +95,10 @@ public class LocateActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("Users").child(user.getUid()).child("Scan 1");
     FloatingActionButton FirebaseUpload;
+
+
+
+
 
 
     @Override
@@ -113,15 +122,17 @@ public class LocateActivity extends AppCompatActivity {
         currentPosition = findViewById(R.id.currentLocation);
 //        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
 //        listView.setAdapter(adapter);
-        //scanMe = findViewById(R.id.scanme);
+        scanMe = findViewById(R.id.scan);
 
         locateMe = findViewById(R.id.locateme);
-//        scanMe.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                scanWifi();
-//            }
-//        });
+
+        scanMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("Scanning WiFi Fingerprint...");
+                scanWifi();
+            }
+        });
 
 
         FirebaseUpload.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +147,6 @@ public class LocateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                scanWifi();
                 if(scanList != null){
                     System.out.println("scanlist is not empty");
                     // instantiate Test Object
@@ -158,49 +168,63 @@ public class LocateActivity extends AppCompatActivity {
                             HashMap<Point, HashMap> dataSet2 = dataSet;
                             if (!dataSet2.isEmpty()) {
                                 System.out.println("9999922222" + dataSet2);// Need to retrieve data from database first!! (either done here or in the testingMode activity)
-                                ArrayList<Point> positionSet = new ArrayList<Point>(dataSet2.keySet());
-                                int num_of_positions = dataSet2.size();
-                                int num_of_bssids = bssid.size();
+                                ArrayList<Point> position_list = new ArrayList<Point>(dataSet2.keySet());
+
 
                                 float nearest1 = Float.MAX_VALUE;
                                 float nearest2 = Float.MAX_VALUE;
 
-                                Point nearest1_position = new Point(0, 0);
-                                Point nearest2_position = new Point(0, 0);
+                                Point nearest1_position = new Point(0,0);
+                                Point nearest2_position = new Point(0,0);
 
                                 int sum = 0;
-//        if (dataSet.isEmpty()) {
-//            return new Point(-1, -1);
-//        } else {
-                                for (int i = 0; i < num_of_positions; i++) {
-                                    for (int j = 0; j < num_of_bssids; j++) {
-                                        sum += Math.pow((((Long) dataSet2.get(positionSet.get(i)).get(bssid.get(i))).intValue() - bssid_rssi.get(bssid.get(j))), 2);
+                                for(Point point: position_list){
+                                    for(String j:bssid){
+                                        if(dataSet2.get(point).containsKey(j)){
+                                            sum += Math.pow(((Long)dataSet2.get(point).get(j)).intValue()- bssid_rssi.get(j),2);
+                                        }
+                                        else{
+                                            sum += Math.pow(bssid_rssi.get(j),2);
+                                        }
                                     }
                                     float dev = (float) Math.sqrt(sum);
-                                    if (dev < nearest1) {
-                                        nearest1 = dev;
-                                        nearest1_position = positionSet.get(i);
-                                    } else if (dev < nearest2) {
+                                    if(dev<nearest1){
+                                        if(nearest1<nearest2){
+                                            nearest2 = dev;
+                                            nearest2_position = point;
+                                        }
+                                        else{
+                                            nearest1 = dev;
+                                            nearest1_position = point;
+                                        }
+
+                                    } else if(dev<nearest2){
                                         nearest2 = dev;
-                                        nearest2_position = positionSet.get(i);
+                                        nearest2_position = point;
                                     }
                                     sum = 0;
                                 }
-//        }
-                                double x = nearest1_position.getX() * nearest1 / (nearest1 + nearest2) +
-                                        nearest2_position.getX() * nearest2 / (nearest1 + nearest2);
-                                double y = nearest1_position.getY() * nearest1 / (nearest1 + nearest2) +
-                                        nearest2_position.getY() * nearest2 / (nearest1 + nearest2);
-                                currentPosition.setText(new Point(x, y).toString());
-                                mapView.setCurrentTPosition(new PointF((float)x, (float)y)); //JJ added in to try
-                                return new  Point(x, y);
 
+                                double x,y;
+
+                                if(nearest1==0&&nearest2==0){
+                                    x = (nearest1_position.getX()+nearest2_position.getX())*0.5;
+                                    y = (nearest1_position.getY()+nearest2_position.getY())*0.5;
+                                }
+                                else{
+                                    x = nearest1_position.getX()*nearest2/(nearest1+nearest2)+
+                                            nearest2_position.getX()*nearest1/(nearest1+nearest2);
+                                    y = nearest1_position.getY()*nearest2/(nearest1+nearest2)+
+                                            nearest2_position.getY()*nearest1/(nearest1+nearest2);
+                                }
+                                System.out.println(x + "," + y);
+                                mapView.setCurrentTPosition(new PointF((float)x,(float)y));
+                                return new Point(x,y);
                             }
                             else{
                                 System.out.println("9992 coord not calculated"  );
                                 currentPosition.setText(new Point(-1, -1).toString());
                                 return new Point(-1, -1);
-
                             }
                         }
 
@@ -209,16 +233,8 @@ public class LocateActivity extends AppCompatActivity {
                             System.out.println("9992 database error");
                             currentPosition.setText(new Point(-1, -1).toString());
                             return new Point(-1, -1);
-
                         }
                     });
-//                    System.out.println("92383312 result calculated" + result);
-//                    if(result.getX()<0 || result.getY()<0){
-//                        Toast.makeText(LocateActivity.this, "Not able to make prediction for current position",Toast.LENGTH_LONG).show();
-//                    }
-//                    else{
-//                        currentPosition.setText(result.toString());
-//                    }
                 }
             }
         });
@@ -244,10 +260,73 @@ public class LocateActivity extends AppCompatActivity {
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         //super.onLoadingComplete(imageUri, view, loadedImage);
                         mapView.setImage(ImageSource.bitmap(loadedImage));
+                        mapView.initialCoordManager(100, 200);
+                        mapView.setCurrentTPosition(new PointF(50.0f, 300.0f)); //initial
+                        checkFinishedPoints();
                     }
                 });
             }
         }
+    }
+
+    private static final String MAP_INFO = "map_info";
+    private static final String MAP_PATH = "map_path";
+    private static final String MAP_WIDTH = "width";
+    private static final String MAP_height = "height";
+
+    private boolean tryLoadOldMap() {
+        SharedPreferences sharedPreferences = getSharedPreferences(MAP_INFO, MODE_PRIVATE);
+        String path = sharedPreferences.getString(MAP_PATH, null);
+        if (path == null)
+            return false;
+        else {
+            float width = sharedPreferences.getFloat(MAP_WIDTH, 0);
+            float height = sharedPreferences.getFloat(MAP_height, 0);
+            loadMapImage(Uri.fromFile(new File(path)), width, height);
+            return true;
+        }
+    }
+
+    private void saveMapInfo(Uri uri, float width, float height) {
+        SharedPreferences sharedPreferences = getSharedPreferences(MAP_INFO, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MAP_PATH, getRealPathFromURI(uri));
+        editor.putFloat(MAP_WIDTH, width);
+        editor.putFloat(MAP_height, height);
+        editor.apply();
+    }
+
+    //Pick picture from gallery is a uri not the actual file.
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void checkFinishedPoints() {
+        String type = "train";
+        List<Fingerprint> fingerprints = new ArrayList<>();
+        for (PointF p : Logger.getCollectedGrid(type)) {
+            //int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
+            //fingerprints.add(new Fingerprint(String.valueOf(fingerprint_count), p.x, p.y));
+            //((GlobalVariables) this.getApplication()).add_fingerprint_count();
+            String name = String.valueOf(p.x) + "," + String.valueOf(p.y);
+            fingerprints.add(new Fingerprint(name, p.x, p.y));
+        }
+        mapView.setFingerprintPoints(fingerprints);
     }
 
     private void scanWifi() {
@@ -258,6 +337,7 @@ public class LocateActivity extends AppCompatActivity {
         // store this list into scanList
         scanList = wifiScan.getScanList();
         System.out.println("Scan Finished");
+        showToast("Scanning WiFi data...");
         System.out.println(scanList);
     }
 
@@ -300,6 +380,8 @@ public class LocateActivity extends AppCompatActivity {
         if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
             mImageUri = data.getData();
             mapView.setImage(ImageSource.uri(mImageUri));
+            mapView.setCurrentTPosition(new PointF(1.0f, 1.0f)); //initial current position
+
         }
     }
 

@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -82,6 +83,7 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
     private EditText yEdit;
     private TextView xTextView;
     private TextView yTextView;
+    private List<ScanResult> scanList;
     FirebaseUser user;
     DatabaseReference database;
     SubsamplingScaleImageView imageToMap;
@@ -103,10 +105,10 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fingerprint);
         mapView = findViewById(R.id.mapImageView);
-        viewFingerprints_button = findViewById(R.id.viewfingerprints);
+        //viewFingerprints_button = findViewById(R.id.viewfingerprints);
         startButton = findViewById(R.id.start_collect);
 
-        typeRadioButton = findViewById(R.id.type);
+        //typeRadioButton = findViewById(R.id.type);
         xEdit = findViewById(R.id.position_x);
         yEdit = findViewById(R.id.position_y);
         //strideEdit = findViewById(R.id.stride_length);
@@ -120,13 +122,13 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         database = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
         storage = FirebaseStorage.getInstance().getReference(user.getUid());
 
-        viewFingerprints_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Intent intent = new Intent(getApplicationContext(), ViewFingerPrintActivity.class);
-                //startActivity(intent);
-            }
-        });
+//        viewFingerprints_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //Intent intent = new Intent(getApplicationContext(), ViewFingerPrintActivity.class);
+//                //startActivity(intent);
+//            }
+//        });
 
         FloatingActionButton upload_fab = (FloatingActionButton) findViewById(R.id.pick_map_button);
         upload_fab.bringToFront();
@@ -137,33 +139,33 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        FloatingActionButton delete_prev_fab = (FloatingActionButton) findViewById(R.id.delete_prev);
-        delete_prev_fab.bringToFront();
-        delete_prev_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
-        });
-
-        FloatingActionButton delete_all_fab = (FloatingActionButton) findViewById(R.id.clear_fingerprints);
-        delete_all_fab.bringToFront();
-        delete_all_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                database.child("Scan 1").removeValue();
-            }
-        });
+//        FloatingActionButton delete_prev_fab = (FloatingActionButton) findViewById(R.id.delete_prev);
+//        delete_prev_fab.bringToFront();
+//        delete_prev_fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //
+//            }
+//        });
+//
+//        FloatingActionButton delete_all_fab = (FloatingActionButton) findViewById(R.id.clear_fingerprints);
+//        delete_all_fab.bringToFront();
+//        delete_all_fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                database.child("Scan 1").removeValue();
+//            }
+//        });
 
         xTextView = findViewById(R.id.x_label);
         yTextView = findViewById(R.id.y_label);
 
-        typeRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkFinishedPoints();
-            }
-        });
+//        typeRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                checkFinishedPoints();
+//            }
+//        });
 
         requestPermissionBeforeStart();
 
@@ -322,6 +324,8 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+
+
     private void saveMapInfo(Uri uri, float width, float height) {
         SharedPreferences sharedPreferences = getSharedPreferences(MAP_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -370,14 +374,26 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
             case R.id.pick_map_button:
                 selectMapFromPhone();
                 break;
-            case R.id.help_data:
-                showToast(getResources().getString(R.string.help_data));
+            case R.id.start_scanning:
+                showToast("Scanning WiFi Fingerprint...");
+                scanWifi();
                 break;
         }
     }
-
+    private void scanWifi() {
+        // perform 1 scan
+        WifiScan wifiScan = new WifiScan(getApplicationContext(),CollectionMapActivity.this);
+        // store results of scan into wifiScan.scanList
+        wifiScan.getWifiNetworksList();
+        // store this list into scanList
+        scanList = wifiScan.getScanList();
+        System.out.println("Scan Finished");
+        showToast("Scanning WiFi data...");
+        System.out.println(scanList);
+    }
     private void checkFinishedPoints() {
-        String type = typeRadioButton.isChecked() ? "train" : "test";
+        //String type = typeRadioButton.isChecked() ? "train" : "test";
+        String type = "train";
         List<Fingerprint> fingerprints = new ArrayList<>();
         for (PointF p : Logger.getCollectedGrid(type)) {
             //int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
@@ -508,21 +524,19 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
     private void saveFingerprintData(final ArrayList<XWiFi> wifiData) {
         PointF pos = mapView.getCurrentTCoord();
         Point currentCoord = new Point((double)pos.x, (double)pos.y);
-
         //int fingerprint_count = ((GlobalVariables) this.getApplication()).get_fingerprint_count();
-
         String coordString = String.valueOf(pos.x).replace(".", ":") + "," + String.valueOf(pos.y).replace(".", ":");
 
         Fingerprint fingerprint = new Fingerprint(coordString, pos.x, pos.y, wifiData); //Create a new fingerprint and x and y coord
         //((GlobalVariables) this.getApplication()).add_fingerprint_count();
         fingerprint.wifiData = wifiData;
-
-        String type = typeRadioButton.isChecked() ? "train" : "test";
+        //String type = typeRadioButton.isChecked() ? "train" : "test";
+        String type = "train";
         updateCollectStatus(fingerprint);
         Logger.saveFingerprintData(type, fingerprint);
-        for (int i = 0; i < wifiData.size(); i++){
-            int rssi = fingerprint.wifiData.get(i).getRssi();
-            String mac_address = fingerprint.wifiData.get(i).mac;
+        for (int i = 0; i < scanList.size(); i++){
+            int rssi = scanList.get(i).level;
+            String mac_address = scanList.get(i).BSSID;
             //String locationNameString = String.valueOf(((GlobalVariables) this.getApplication()).get_fingerprint_count());
             database.child("Scan 1").child(coordString).child(mac_address).setValue(rssi);
             //database.child("Scan 1").child(locationNameString).child("Coordinates").setValue(currentCoord);
@@ -571,7 +585,7 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         if (bitmap != null) {
             mapView.setImage(ImageSource.bitmap(bitmap));
             mapView.initialCoordManager(width, height);
-            mapView.setCurrentTPosition(new PointF(1.0f, 1.0f)); //initial current position
+            mapView.setCurrentTPosition(new PointF(50.0f, 300.0f)); //initial current position
             xTextView.setText(String.format(Locale.ENGLISH, "X(max:%.1f)", width));
             yTextView.setText(String.format(Locale.ENGLISH, "Y(max:%.1f)", height));
             checkFinishedPoints();

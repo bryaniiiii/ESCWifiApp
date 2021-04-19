@@ -33,7 +33,7 @@ public class StartingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
-        mapMe = findViewById(R.id.mapme);
+        //mapMe = findViewById(R.id.mapme);
         jjmap = findViewById(R.id.jjmap);
         locateMe = findViewById(R.id.locateme);
         logout = findViewById(R.id.logout);
@@ -64,12 +64,12 @@ public class StartingActivity extends AppCompatActivity {
         });
 
 
-        mapMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ChooseImage.class);
-                startActivity(intent);
-            }
-        });
+//        mapMe.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), ChooseImage.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }

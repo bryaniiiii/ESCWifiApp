@@ -8,34 +8,24 @@
     android:padding="10dp"
     android:orientation="vertical"
     android:gravity="center"
-    android:layout_marginTop="50dp">
-
-
-    <Button
-        android:id="@+id/mapme"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        android:background="@drawable/ripple_effect"
-        android:text="Mapping Phase"
-        />
+    android:background="@drawable/background">
 
     <Button
         android:id="@+id/jjmap"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_margin="15dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/ripple_effect"
-        android:text="JJ Phase"
+        android:text="Mapping"
         />
 
     <Button
         android:id="@+id/locateme"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_margin="15dp"
+        android:layout_margin="25dp"
         android:background="@drawable/ripple_effect"
-        android:text="Testing Phase"
+        android:text="Localization"
         />
 
 
@@ -48,7 +38,7 @@
 
         <Button
             android:id="@+id/logout"
-            android:layout_width="250dp"
+            android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_margin="15dp"
             android:background="@drawable/ripple_effect"

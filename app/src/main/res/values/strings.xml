@@ -15,9 +15,9 @@
     <string name="default_stride">1</string>
     <string name="collect_help">\?</string>
     <string name="check">check</string>
-    <string name="x_width">X(Width)</string>
+    <string name="x_width">X (Width)</string>
     <string name="init_x">1.0</string>
-    <string name="y_height">Y(Height)</string>
+    <string name="y_height">Y (Height)</string>
     <string name="init_y">1.0</string>
     <string name="start">Map Fingerprint</string>
     <string name="load_map">Load map</string>

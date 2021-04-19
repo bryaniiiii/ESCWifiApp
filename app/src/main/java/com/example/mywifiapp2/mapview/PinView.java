@@ -113,6 +113,11 @@ public class PinView extends SubsamplingScaleImageView {
         this.setCurrentTPosition(coordManager.getCurrentTCoord());
     }
 
+    public void moveTo(PointF p) {
+        coordManager.moveToPosition(p);
+        this.setCurrentTPosition(coordManager.getCurrentTCoord());
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

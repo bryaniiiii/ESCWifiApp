@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context="com.example.mywifiapp2.CollectionMapActivity">
 
-
+    <!--
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,6 +40,7 @@
                 android:text="@string/test" />
         </RadioGroup>
 
+
         <Button
             android:id="@+id/help_data"
             android:layout_width="match_parent"
@@ -49,6 +50,7 @@
             android:onClick="onClick"
             android:text="@string/collect_help"  />
     </LinearLayout>
+    -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -123,25 +125,24 @@
             android:background="@drawable/ripple_effect"
             android:text="@string/start"
 
-            android:layout_marginRight="5dp"/>
-
+            />
         <Button
-            android:id="@+id/viewfingerprints"
+            android:id="@+id/start_scanning"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ripple_effect"
-            app:rippleColor="@color/paper"
             android:onClick="onClick"
-            android:text="@string/viewfingerprints"
-            android:layout_marginRight="5dp"/>
+            app:rippleColor="@color/paper"
+            android:background="@drawable/ripple_effect"
+            android:text="Start Scanning"
+
+            />
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/margin">
+        android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/download_map_fab"
@@ -181,7 +182,7 @@
             android:contentDescription="Upload Map"
             android:src="@drawable/upload_map" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/delete_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -215,17 +216,14 @@
             android:backgroundTint="@color/maroon"
             app:borderWidth="0dp"
             android:contentDescription="Upload Map"
-            android:src="@drawable/deleteall" />
+            android:src="@drawable/deleteall" /> -->
 
         <com.example.mywifiapp2.mapview.PinView
             android:id="@+id/mapImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10sp"
             android:layout_gravity="end|bottom"/>
 
     </RelativeLayout>
-
-
 
 </LinearLayout>
