@@ -7,6 +7,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -32,6 +33,7 @@ public class WifiScan {
     }
 
 
+
     public void getWifiNetworksList() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
@@ -48,10 +50,15 @@ public class WifiScan {
         }, filter);
 
         boolean startScan = wifiManager.startScan();
+        Log.i("Test","startScan: "+startScan);
+        try {
+            Toast.makeText(activityContext,"Scanning WiFi...",Toast.LENGTH_LONG).show();
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if(!startScan){
-            Toast.makeText(activityContext,"Please Enable Access of Location",Toast.LENGTH_LONG).show();
-            Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            activityContext.startActivity(myIntent);
+            Toast.makeText(activityContext,"Did you turn location settings on? Wait a while and try again",Toast.LENGTH_LONG).show();
         }
 
     }
