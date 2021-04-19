@@ -173,9 +173,10 @@ public class LocateActivity extends AppCompatActivity {
 
                                 float nearest1 = Float.MAX_VALUE;
                                 float nearest2 = Float.MAX_VALUE;
-
+                                float nearest3 = Float.MAX_VALUE;
                                 Point nearest1_position = new Point(0,0);
                                 Point nearest2_position = new Point(0,0);
+                                Point nearest3_position = new Point(0,0);
 
                                 int sum = 0;
                                 for(Point point: position_list){
@@ -188,34 +189,46 @@ public class LocateActivity extends AppCompatActivity {
                                         }
                                     }
                                     float dev = (float) Math.sqrt(sum);
-                                    if(dev<nearest1){
-                                        if(nearest1<nearest2){
-                                            nearest2 = dev;
-                                            nearest2_position = point;
-                                        }
-                                        else{
-                                            nearest1 = dev;
-                                            nearest1_position = point;
-                                        }
-
-                                    } else if(dev<nearest2){
+                                    float temp;
+                                    Point temp_point;
+                                    Point dev_point = point;
+                                    if (dev < nearest1) {
+                                        temp = nearest1;
+                                        temp_point = nearest1_position;
+                                        nearest1 = dev;
+                                        nearest1_position = dev_point;
+                                        dev = temp;
+                                        dev_point = temp_point;
+                                    }
+                                    if(dev < nearest2){
+                                        temp = nearest2;
+                                        temp_point = nearest2_position;
                                         nearest2 = dev;
-                                        nearest2_position = point;
+                                        nearest2_position = dev_point;
+                                        dev = temp;
+                                        dev_point = temp_point;
+                                    }
+                                    if(dev < nearest3){
+                                        temp = nearest3;
+                                        temp_point = nearest3_position;
+                                        nearest3 = dev;
+                                        nearest3_position = dev_point;
                                     }
                                     sum = 0;
                                 }
 
                                 double x,y;
 
-                                if(nearest1==0&&nearest2==0){
-                                    x = (nearest1_position.getX()+nearest2_position.getX())*0.5;
-                                    y = (nearest1_position.getY()+nearest2_position.getY())*0.5;
-                                }
-                                else{
-                                    x = nearest1_position.getX()*nearest2/(nearest1+nearest2)+
-                                            nearest2_position.getX()*nearest1/(nearest1+nearest2);
-                                    y = nearest1_position.getY()*nearest2/(nearest1+nearest2)+
-                                            nearest2_position.getY()*nearest1/(nearest1+nearest2);
+                                if (nearest1 == 0 && nearest2 == 0 && nearest3 ==0) {
+                                    x = (nearest1_position.getX() + nearest2_position.getX()+nearest3_position.getX())/3;
+                                    y = (nearest1_position.getY() + nearest2_position.getY()+nearest3_position.getY())/3 ;
+                                } else {
+                                    x = nearest1_position.getX() * (nearest2 + nearest3) / (nearest1 + nearest2 + nearest3) +
+                                            nearest2_position.getX() * (nearest1 + nearest3) / (nearest1 + nearest2 + nearest3) +
+                                            nearest3_position.getX() * (nearest1 + nearest2) / (nearest1 + nearest2 + nearest3);
+                                    y = nearest1_position.getY() * (nearest2 + nearest3) / (nearest1 + nearest2 + nearest3) +
+                                            nearest2_position.getY() * (nearest1 + nearest3) / (nearest1 + nearest2 + nearest3) +
+                                            nearest3_position.getY() * (nearest1 + nearest2) / (nearest1 + nearest2 + nearest3);
                                 }
                                 System.out.println(x + "," + y);
                                 mapView.setCurrentTPosition(new PointF((float)x,(float)y));
