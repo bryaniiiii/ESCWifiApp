@@ -388,7 +388,7 @@ public class CollectionMapActivity extends AppCompatActivity implements View.OnC
         // store this list into scanList
         scanList = wifiScan.getScanList();
         System.out.println("Scan Finished");
-        showToast("Scanning WiFi data...");
+        showToast("WiFi data scanning completed");
         System.out.println(scanList);
     }
     private void checkFinishedPoints() {

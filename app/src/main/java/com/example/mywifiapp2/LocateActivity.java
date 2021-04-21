@@ -262,7 +262,7 @@ public class LocateActivity extends AppCompatActivity {
                         mapView.setImage(ImageSource.bitmap(loadedImage));
                         mapView.initialCoordManager(100, 200);
                         mapView.setCurrentTPosition(new PointF(50.0f, 300.0f)); //initial
-                        checkFinishedPoints();
+                        //checkFinishedPoints();
                     }
                 });
             }
